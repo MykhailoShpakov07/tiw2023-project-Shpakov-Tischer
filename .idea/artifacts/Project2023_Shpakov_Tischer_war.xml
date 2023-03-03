@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Project2023-Shpakov-Tischer:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Project2023-Shpakov-Tischer</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Project2023-Shpakov-Tischer-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Project2023-Shpakov-Tischer:war exploded" />
+    </root>
+  </artifact>
+</component>
