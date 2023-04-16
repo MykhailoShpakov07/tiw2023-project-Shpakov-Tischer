@@ -8,6 +8,6 @@
     <h1><%= "This is project for TIW 2023 course" %>
     </h1>
     <br/>
-    <a href="hello-servlet">Hello Word!</a>
+    <a href="/Project2023_Shpakov_Tischer/hello-servlet">Hello Word!</a>
 </body>
 </html>
