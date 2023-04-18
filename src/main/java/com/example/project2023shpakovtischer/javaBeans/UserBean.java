@@ -2,7 +2,7 @@ package com.example.project2023shpakovtischer.javaBeans;
 
 import com.example.project2023shpakovtischer.enums.UserRole;
 
-public class userBean {
+public class UserBean {
     private int userId;
     private String name;
     private String surname;
