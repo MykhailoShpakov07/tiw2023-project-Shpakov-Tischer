@@ -22,9 +22,12 @@ public class UserDAO {
 
     public UserBean getUserByEmail(String email) throws UnavailableException {
         UserBean user = new UserBean();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL)) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL);
             preparedStatement.setString(1, email);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user.setUserId(resultSet.getInt("userId"));
                 user.setName(resultSet.getString("name"));
@@ -37,16 +40,22 @@ public class UserDAO {
                 return null;
             }
         } catch (SQLException e) {
+            closeResultAndStatement(resultSet, preparedStatement);
             throw new UnavailableException("Error with SQL");
         }
+
+        closeResultAndStatement(resultSet, preparedStatement);
         return user;
     }
 
     public UserBean getUserById(int id) throws UnavailableException {
         UserBean user = new UserBean();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID)) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(GET_USER_BY_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user.setUserId(resultSet.getInt("userId"));
                 user.setName(resultSet.getString("name"));
@@ -59,8 +68,34 @@ public class UserDAO {
                 return null;
             }
         } catch (SQLException e) {
+            closeResultAndStatement(resultSet, preparedStatement);
             throw new UnavailableException("Error with SQL");
         }
+
+        closeResultAndStatement(resultSet, preparedStatement);
+
         return user;
+    }
+
+    private void closeResultAndStatement(ResultSet resultSet, PreparedStatement preparedStatement){
+        try {
+            resultSet.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void closeStatement(PreparedStatement preparedStatement){
+        try {
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

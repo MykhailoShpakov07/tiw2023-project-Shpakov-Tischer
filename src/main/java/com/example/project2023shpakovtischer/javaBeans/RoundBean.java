@@ -1,10 +1,10 @@
 package com.example.project2023shpakovtischer.javaBeans;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class RoundBean {
     int roundId;
-    Timestamp date;
+    Date date;
 
     public int getRoundId() {
         return roundId;
@@ -14,11 +14,11 @@ public class RoundBean {
         this.roundId = roundId;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

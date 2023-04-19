@@ -1,5 +1,7 @@
 package com.example.project2023shpakovtischer.dao;
 
+import com.example.project2023shpakovtischer.javaBeans.CourseBean;
+
 import javax.servlet.UnavailableException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,36 +21,68 @@ public class CourseDAO {
 
     public CourseBean getCourseById(int id) throws UnavailableException {
         CourseBean course = new CourseBean();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COURSE_BY_ID)) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(GET_COURSE_BY_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                course.setCourseId(resultSet.getInt("courseId"));
-                course.setCourseName(resultSet.getString("courseName"));
+                course.setId(resultSet.getInt("courseId"));
+                course.setName(resultSet.getString("courseName"));
             }
             else{
                 return null;
             }
         } catch (SQLException e) {
-            throw new UnavailableException("Error with SQL");
+            closeResultAndStatement(resultSet, preparedStatement);
+            throw new UnavailableException(e.getMessage());
         }
+        closeResultAndStatement(resultSet, preparedStatement);
         return course;
     }
 
     public ArrayList<CourseBean> getCoursesByProfessorId(int id) throws UnavailableException {
         ArrayList<CourseBean> courses = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COURSES_BY_PROFESSOR_ID)) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(GET_COURSES_BY_PROFESSOR_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 CourseBean course = new CourseBean();
-                course.setCourseId(resultSet.getInt("courseId"));
-                course.setCourseName(resultSet.getString("courseName"));
+                course.setId(resultSet.getInt("courseId"));
+                course.setName(resultSet.getString("courseName"));
                 courses.add(course);
             }
         } catch (SQLException e) {
-            throw new UnavailableException("Error with SQL");
+            closeResultAndStatement(null, null);
+            throw new UnavailableException(e.getMessage());
         }
+        closeResultAndStatement(resultSet, preparedStatement);
         return courses;
+    }
+
+    private void closeResultAndStatement(ResultSet resultSet, PreparedStatement preparedStatement){
+        try {
+            resultSet.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void closeStatement(PreparedStatement preparedStatement){
+        try {
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

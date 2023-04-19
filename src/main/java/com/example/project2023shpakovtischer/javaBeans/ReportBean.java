@@ -1,12 +1,13 @@
 package com.example.project2023shpakovtischer.javaBeans;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class ReportBean {
     private int reportCode;
     private Timestamp reportDateTime;
     private String courseName;
-    private Timestamp roundDateTime;
+    private Date roundDate;
 
     public int getReportCode() {
         return reportCode;
@@ -32,11 +33,11 @@ public class ReportBean {
         this.courseName = courseName;
     }
 
-    public Timestamp getRoundDateTime() {
-        return roundDateTime;
+    public Date getRoundDate() {
+        return roundDate;
     }
 
-    public void setRoundDateTime(Timestamp roundDateTime) {
-        this.roundDateTime = roundDateTime;
+    public void setRoundDate(Date roundDate) {
+        this.roundDate = roundDate;
     }
 }

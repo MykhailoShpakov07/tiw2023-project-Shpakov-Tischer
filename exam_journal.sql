@@ -142,10 +142,10 @@ DROP TABLE IF EXISTS `course`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `course` (
-  `courseId` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `profId` int NOT NULL,
-  PRIMARY KEY (`courseId`),
+  PRIMARY KEY (`id`),
   KEY `userId_idx` (`profId`) /*!80000 INVISIBLE */,
   CONSTRAINT `profId` FOREIGN KEY (`profId`) REFERENCES `user` (`userId`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

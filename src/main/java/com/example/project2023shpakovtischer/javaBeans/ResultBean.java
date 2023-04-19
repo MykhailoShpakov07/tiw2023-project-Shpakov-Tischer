@@ -1,5 +1,6 @@
 package com.example.project2023shpakovtischer.javaBeans;
 
+import com.example.project2023shpakovtischer.enums.EvaluationStatus;
 import com.example.project2023shpakovtischer.enums.Mark;
 
 public class ResultBean {

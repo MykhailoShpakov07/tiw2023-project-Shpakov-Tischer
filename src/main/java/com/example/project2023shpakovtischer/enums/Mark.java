@@ -1,7 +1,8 @@
 package com.example.project2023shpakovtischer.enums;
 
 public enum Mark {
-    ASSENTE(15), RIPROVATO(16), RIMANDATO(17),
+
+    NON_DEFINITO(0), ASSENTE(15), RIMANDATO(16), RIPROVATO(17),
     DICIOTTO(18), DICIANNOVE(19), VENTI(20), VENTUNO(21), VENTIDUE(22), VENTITRE(23), VENTIQUATTRO(24),
     VENTICINQUE(25), VENTISEI(26), VENTISIETTE(27), VENTOTTO(28), VENTINOVE(29), TRENTA(30), TRENTAELODE(31);
     private final int value;
@@ -12,6 +13,7 @@ public enum Mark {
 
     public static Mark getUserRoleFromInt(int value){
         switch (value){
+            case 0: return NON_DEFINITO;
             case 15: return ASSENTE;
             case 16: return RIMANDATO;
             case 17: return RIPROVATO;
