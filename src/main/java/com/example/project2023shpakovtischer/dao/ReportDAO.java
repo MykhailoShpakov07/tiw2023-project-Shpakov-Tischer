@@ -13,7 +13,7 @@ public class ReportDAO {
         this.connection = connection;
     }
 
-    public ReportBean verbalizeRound(int roundId) throws UnavailableException, SQLException {
+    public ReportBean createReport(int roundId) throws UnavailableException, SQLException {
         RoundDAO roundDAO = new RoundDAO(connection);
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         ReportBean report;
@@ -21,8 +21,6 @@ public class ReportDAO {
         try {
             connection.setAutoCommit(false);
             report = roundDAO.createReport(roundId);
-            //todo it doesn't work, we need to return to initial state before commit
-            connection.commit();
             attendanceDAO.verbalizeMarks(roundId);
             connection.commit();
         } catch (UnavailableException e) {
