@@ -59,10 +59,10 @@ public class AttendanceDAO {
                 AttendanceBean attendance = new AttendanceBean();
                 attendance.setStudentId(resultSet.getInt("studentId"));
                 attendance.setRoundId(resultSet.getInt("roundId"));
-                attendance.setName(resultSet.getString("name"));
-                attendance.setSurname(resultSet.getString("surname"));
-                attendance.setEmail(resultSet.getString("email"));
-                attendance.setStudyCourse(resultSet.getString("studyCourse"));
+                attendance.setStudentName(resultSet.getString("name"));
+                attendance.setStudentSurname(resultSet.getString("surname"));
+                attendance.setStudentEmail(resultSet.getString("email"));
+                attendance.setStudentStudyCourse(resultSet.getString("studyCourse"));
                 attendance.setMark(Mark.getUserRoleFromInt(resultSet.getInt("mark")));
                 attendance.setEvaluationStatus(EvaluationStatus.getEvaluationStatusFromInt(resultSet.getInt("evaluationStatus")));
                 attendances.add(attendance);
@@ -92,10 +92,10 @@ public class AttendanceDAO {
                 attendance = new AttendanceBean();
                 attendance.setStudentId(resultSet.getInt("studentId"));
                 attendance.setRoundId(resultSet.getInt("roundId"));
-                attendance.setName(resultSet.getString("name"));
-                attendance.setSurname(resultSet.getString("surname"));
-                attendance.setEmail(resultSet.getString("email"));
-                attendance.setStudyCourse(resultSet.getString("studyCourse"));
+                attendance.setStudentName(resultSet.getString("name"));
+                attendance.setStudentSurname(resultSet.getString("surname"));
+                attendance.setStudentEmail(resultSet.getString("email"));
+                attendance.setStudentStudyCourse(resultSet.getString("studyCourse"));
                 attendance.setMark(Mark.getUserRoleFromInt(resultSet.getInt("mark")));
                 attendance.setEvaluationStatus(EvaluationStatus.getEvaluationStatusFromInt(resultSet.getInt("evaluationStatus")));
             }

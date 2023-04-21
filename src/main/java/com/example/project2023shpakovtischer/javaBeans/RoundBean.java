@@ -3,15 +3,15 @@ package com.example.project2023shpakovtischer.javaBeans;
 import java.sql.Date;
 
 public class RoundBean {
-    int roundId;
+    int id;
     Date date;
 
-    public int getRoundId() {
-        return roundId;
+    public int getId() {
+        return id;
     }
 
-    public void setRoundId(int roundId) {
-        this.roundId = roundId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getDate() {

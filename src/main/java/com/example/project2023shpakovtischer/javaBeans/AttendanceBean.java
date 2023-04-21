@@ -6,10 +6,10 @@ import com.example.project2023shpakovtischer.enums.Mark;
 public class AttendanceBean {
     private int studentId;
     private int roundId;
-    private String name;
-    private String surname;
-    private String email;
-    private String studyCourse;
+    private String studentName;
+    private String studentSurname;
+    private String studentEmail;
+    private String studentStudyCourse;
     private Mark mark;
     private EvaluationStatus evaluationStatus;
 
@@ -29,36 +29,36 @@ public class AttendanceBean {
         this.roundId = roundId;
     }
 
-    public String getName() {
-        return name;
+    public String getStudentName() {
+        return studentName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getStudentSurname() {
+        return studentSurname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setStudentSurname(String studentSurname) {
+        this.studentSurname = studentSurname;
     }
 
-    public String getEmail() {
-        return email;
+    public String getStudentEmail() {
+        return studentEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail = studentEmail;
     }
 
-    public String getStudyCourse() {
-        return studyCourse;
+    public String getStudentStudyCourse() {
+        return studentStudyCourse;
     }
 
-    public void setStudyCourse(String studyCourse) {
-        this.studyCourse = studyCourse;
+    public void setStudentStudyCourse(String studentStudyCourse) {
+        this.studentStudyCourse = studentStudyCourse;
     }
 
     public Mark getMark() {

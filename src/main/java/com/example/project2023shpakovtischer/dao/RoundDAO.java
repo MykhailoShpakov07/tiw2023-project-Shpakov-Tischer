@@ -34,7 +34,7 @@ public class RoundDAO {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 RoundBean round = new RoundBean();
-                round.setRoundId(resultSet.getInt("roundId"));
+                round.setId(resultSet.getInt("roundId"));
                 round.setDate(resultSet.getDate("date"));
                 rounds.add(round);
             }

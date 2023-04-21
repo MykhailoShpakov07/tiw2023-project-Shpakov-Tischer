@@ -29,7 +29,7 @@ public class UserDAO {
             preparedStatement.setString(1, email);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user.setUserId(resultSet.getInt("userId"));
+                user.setId(resultSet.getInt("userId"));
                 user.setName(resultSet.getString("name"));
                 user.setSurname(resultSet.getString("surname"));
                 user.setEmail(resultSet.getString("email"));
@@ -57,7 +57,7 @@ public class UserDAO {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                user.setUserId(resultSet.getInt("userId"));
+                user.setId(resultSet.getInt("userId"));
                 user.setName(resultSet.getString("name"));
                 user.setSurname(resultSet.getString("surname"));
                 user.setEmail(resultSet.getString("email"));
