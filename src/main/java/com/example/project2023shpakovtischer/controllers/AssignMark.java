@@ -43,26 +43,26 @@ public class AssignMark extends HttpServlet {
         }
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
 
         int roundId = 0;
         int studentId = 0;
         int mark = 0;
         try {
-            roundId = Integer.parseInt((String) ctx.getVariable("roundId"));
-            studentId = Integer.parseInt((String) ctx.getVariable("studentId"));
-            mark = Integer.parseInt((String) ctx.getVariable("mark"));
+            roundId = Integer.parseInt(request.getParameter("roundId"));
+            studentId = Integer.parseInt(request.getParameter("studentId"));
+            mark = Integer.parseInt( request.getParameter("mark"));
         } catch (NumberFormatException e) {
             ctx.setVariable("message", "Invalid student id or round id or mark");
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
             attendanceDAO.assignMark(studentId, roundId, mark);
         } catch (UnavailableException e) {
             System.out.println("UnavailableException:" + e.getMessage());
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
         }
         templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
     }

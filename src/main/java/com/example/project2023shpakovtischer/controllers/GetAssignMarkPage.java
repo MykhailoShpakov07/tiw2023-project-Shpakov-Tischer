@@ -1,6 +1,7 @@
 package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
+import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -53,18 +54,26 @@ public class GetAssignMarkPage extends HttpServlet {
         int studentId = 0;
         int roundId = 0;
         try {
-            studentId = Integer.parseInt((String) ctx.getVariable("studentId"));
-            roundId = Integer.parseInt((String) ctx.getVariable("roundId"));
+            studentId = Integer.parseInt(request.getParameter("studentId"));
+            roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
             ctx.setVariable("message", "Invalid student id or round id");
             templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
+        AttendanceBean attendance = null;
         try {
-            attendanceDAO.getAttendance(studentId, roundId);
+             attendance = attendanceDAO.getAttendance(studentId, roundId);
         } catch (UnavailableException e) {
             System.out.println("UnavailableException:" + e.getMessage());
             templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+        }
+        if (attendance == null){
+            ctx.setVariable("message", "No attendance found");
+            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+        } else {
+            ctx.setVariable("attendance", attendance);
+            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
         }
         templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
     }

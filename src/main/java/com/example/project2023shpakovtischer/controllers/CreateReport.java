@@ -44,11 +44,12 @@ public class CreateReport extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
 
         int roundId = 0;
         try {
-            roundId = Integer.parseInt((String) ctx.getVariable("roundId"));
+            roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
             ctx.setVariable("message", "Invalid round id");
             templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());

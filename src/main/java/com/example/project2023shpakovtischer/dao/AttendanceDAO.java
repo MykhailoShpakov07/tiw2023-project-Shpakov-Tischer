@@ -17,24 +17,15 @@ public class AttendanceDAO {
 
     private static final String GET_ATTENDANCES_BY_ROUND_ID_ORDERED_BY = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
             "FROM attends join user on studentId = userId WHERE roundId = ? ";
-
     private static final String GET_ATTENDANCE_BY_ROUND_ID_AND_STUDENT_ID = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
             "FROM attends join user on studentId = userId WHERE roundId = ? AND studentId = ?";
-
     private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = 1 WHERE roundId = ? AND studentId = ?";
-
     private static final String PUBLISH_MARKS = "UPDATE attends SET evaluationStatus = 2 WHERE roundId = ? and evaluationStatus = 1";
-
     private static final String REFUSE_MARK = "UPDATE attends SET evaluationStatus = 3 WHERE studentId = ? AND roundId = ?";
-
-    private static final String VERBALIZE_MARKS = "UPDATE attends SET evaluationStatus = 4 WHERE roundId = ? and ( evaluationStatus = 2 or evaluationStatus = 3 )";
-
-    private static final String UPDATE_MARK_ON_REFUSED_ATTENDANCES = "UPDATE attends SET mark = 16 WHERE roundId = ?";
-
     private static final String CREATE_VIEW_ROUNDS_ON_NEXT_DATES = "CREATE OR REPLACE VIEW SameCourseNextDate AS " +
             "SELECT roundId FROM round WHERE courseId = (SELECT courseId FROM round WHERE roundId = ?) AND date > (SELECT date FROM round WHERE roundId = ?) ";
-
-    private static final String DELETE_FURTHER_ATTENDANCES = "DELETE FROM attends WHERE (studentId, roundId ) in (SELECT studentId, roundId FROM attends join SameCourseNextDate S on roundId = S.roundId WHERE roundId = ? and mark between 18 and 31)";
+    private static final String DELETE_FURTHER_ATTENDANCES = "DELETE FROM attends WHERE (studentId, roundId ) in (SELECT studentId, roundId FROM attends join SameCourseNextDate " +
+            "WHERE roundId = ? and mark between 18 and 31)";
 
 
     public AttendanceDAO(Connection connection){
@@ -158,28 +149,8 @@ public class AttendanceDAO {
         closeStatement(preparedStatement);
     }
 
-    void verbalizeMarks(int roundId) throws UnavailableException {
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = connection.prepareStatement(UPDATE_MARK_ON_REFUSED_ATTENDANCES);
-            preparedStatement.setInt(1, roundId);
-            preparedStatement.executeUpdate();
 
-            preparedStatement = connection.prepareStatement(VERBALIZE_MARKS);
-            preparedStatement.setInt(1, roundId);
-            preparedStatement.executeUpdate();
-
-            deleteAttendancesForNextRounds(roundId);
-        }
-        catch (SQLException e) {
-            closeStatement(preparedStatement);
-            throw new UnavailableException(e.getMessage());
-        }
-
-        closeStatement(preparedStatement);
-    }
-
-    private void deleteAttendancesForNextRounds(int roundId) throws SQLException {
+    void deleteAttendancesForNextRounds(int roundId) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(CREATE_VIEW_ROUNDS_ON_NEXT_DATES);
         preparedStatement.setInt(1, roundId);
         preparedStatement.setInt(2, roundId);

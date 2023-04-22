@@ -49,8 +49,8 @@ public class RefuseMark extends HttpServlet {
         int studentId = 0;
         int roundId = 0;
         try {
-            studentId = Integer.parseInt((String) ctx.getVariable("studentId"));
-            roundId = Integer.parseInt((String) ctx.getVariable("roundId"));
+            studentId = Integer.parseInt(request.getParameter("studentId"));
+            roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             ctx.setVariable("message", "Invalid student id or round id");
