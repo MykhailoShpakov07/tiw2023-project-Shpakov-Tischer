@@ -4,6 +4,7 @@ import com.example.project2023shpakovtischer.enums.UserRole;
 
 public class UserBean {
     private int id;
+    private String password;
     private String name;
     private String surname;
     private String email;
@@ -16,6 +17,13 @@ public class UserBean {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {

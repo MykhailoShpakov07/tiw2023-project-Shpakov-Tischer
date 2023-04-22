@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RoundDAO {
     private Connection connection;
@@ -20,17 +19,44 @@ public class RoundDAO {
 
     private static final String GET_ROUNDS_BY_COURSE_ID = "SELECT roundId, date FROM round WHERE courseId = ?";
 
+    private static final String GET_ROUNDS_BY_COURSE_ID_AND_STUDENT_ID = "SELECT DISTINCT roundId, date FROM attends join round WHERE courseId = ? AND studentId = ? ";
     private static final String CREATE_REPORT = "UPDATE round SET reportIsCreated = 1, reportDateTime = NOW() WHERE roundId = ?";
 
     private static final String GET_REPORT_BY_ROUND_ID = "SELECT reportCode, reportDateTime, c.name , date FROM round join course c on courseId = c.courseId WHERE roundId = ?";
 
-    public List<RoundBean> getRoundsByCourseId(int courseId) throws UnavailableException {
-        List<RoundBean> rounds = new ArrayList<>();
+    public ArrayList<RoundBean> getRoundsByCourseId(int courseId) throws UnavailableException {
+        ArrayList<RoundBean> rounds = new ArrayList<>();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             preparedStatement = connection.prepareStatement(GET_ROUNDS_BY_COURSE_ID);
             preparedStatement.setInt(1, courseId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                RoundBean round = new RoundBean();
+                round.setId(resultSet.getInt("roundId"));
+                round.setDate(resultSet.getDate("date"));
+                rounds.add(round);
+            }
+        }
+        catch (SQLException ex){
+            closeResultAndStatement(resultSet, preparedStatement);
+            throw new UnavailableException(ex.getMessage());
+        }
+
+        closeResultAndStatement(resultSet, preparedStatement);
+        return rounds;
+    }
+
+    public ArrayList<RoundBean> getRoundsByCourseIdAndStudentId(int courseId, int studentId) throws UnavailableException {
+        ArrayList<RoundBean> rounds = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try{
+            preparedStatement = connection.prepareStatement(GET_ROUNDS_BY_COURSE_ID_AND_STUDENT_ID);
+            preparedStatement.setInt(1, courseId);
+            preparedStatement.setInt(2, studentId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 RoundBean round = new RoundBean();

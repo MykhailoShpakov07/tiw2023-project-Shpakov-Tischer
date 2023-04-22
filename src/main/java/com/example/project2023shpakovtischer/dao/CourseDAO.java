@@ -18,6 +18,7 @@ public class CourseDAO {
 
     private static final String GET_COURSE_BY_ID = "SELECT * FROM course WHERE courseId = ?";
     private static final String GET_COURSES_BY_PROFESSOR_ID = "SELECT * FROM course WHERE profid = ?";
+    private static final String GET_COURSES_BY_STUDENT_ID = "SELECT DISTINCT courseId, name FROM ( attends join round ) join course WHERE studentId = ?";
 
     public CourseBean getCourseById(int id) throws UnavailableException {
         CourseBean course = new CourseBean();
@@ -48,6 +49,28 @@ public class CourseDAO {
         ResultSet resultSet = null;
         try {
             preparedStatement = connection.prepareStatement(GET_COURSES_BY_PROFESSOR_ID);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                CourseBean course = new CourseBean();
+                course.setId(resultSet.getInt("courseId"));
+                course.setName(resultSet.getString("courseName"));
+                courses.add(course);
+            }
+        } catch (SQLException e) {
+            closeResultAndStatement(null, null);
+            throw new UnavailableException(e.getMessage());
+        }
+        closeResultAndStatement(resultSet, preparedStatement);
+        return courses;
+    }
+
+    public ArrayList<CourseBean> getCoursesByStudentId(int id) throws UnavailableException {
+        ArrayList<CourseBean> courses = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = connection.prepareStatement(GET_COURSES_BY_STUDENT_ID);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
