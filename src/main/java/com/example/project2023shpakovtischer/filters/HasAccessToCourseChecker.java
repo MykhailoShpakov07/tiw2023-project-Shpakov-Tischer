@@ -39,10 +39,11 @@ public class HasAccessToCourseChecker extends HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         int CourseId = 0;
         try {
-            CourseId = Integer.parseInt(request.getParameter("CourseId"));
+            CourseId = Integer.parseInt(request.getParameter("courseId"));
         } catch (NumberFormatException e){
             response.sendError(400);
         }
+        //LoggedInChecker must be applied before this filter
         int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
         UserRole role = ((UserBean) request.getSession().getAttribute("user")).getRole();
         if(role.equals(UserRole.PROFESSOR)){
@@ -56,12 +57,12 @@ public class HasAccessToCourseChecker extends HttpFilter {
         } else if (role.equals(UserRole.STUDENT)) {
             RoundDAO roundDAO = new RoundDAO(connection);
             ArrayList<RoundBean> rounds = roundDAO.getRoundsByCourseIdAndStudentId(CourseId, UserId);
+            //check if user has at least one round relative to that course
             if (rounds.size() > 0) {
                 chain.doFilter(request, response);
             } else {
                 response.sendError(403);
             }
         }
-
     }
 }

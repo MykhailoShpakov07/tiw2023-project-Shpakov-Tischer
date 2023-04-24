@@ -2,6 +2,7 @@ package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.CourseDAO;
 import com.example.project2023shpakovtischer.dao.RoundDAO;
+import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.javaBeans.CourseBean;
 import com.example.project2023shpakovtischer.javaBeans.RoundBean;
 import com.example.project2023shpakovtischer.javaBeans.UserBean;
@@ -20,10 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
+import static com.example.project2023shpakovtischer.utils.Paths.COURSE_ROUNDS_PAGE;
 import static com.example.project2023shpakovtischer.utils.Paths.GET_COURSE_ROUNDS_SERVLET;
-import static com.example.project2023shpakovtischer.utils.Paths.HOME_PAGE;
 
 @WebServlet(name = "GetCourseRounds", value = GET_COURSE_ROUNDS_SERVLET)
 public class GetCourseRounds extends HttpServlet {
@@ -49,7 +51,6 @@ public class GetCourseRounds extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //TODO complete
         ServletContext servletContext = getServletContext();
         String path = servletContext.getContextPath();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -59,34 +60,44 @@ public class GetCourseRounds extends HttpServlet {
         CourseDAO courseDAO = new CourseDAO(connection);
         RoundDAO roundDAO = new RoundDAO(connection);
         int courseId = -1;
-
         UserBean user = (UserBean) request.getSession().getAttribute("user");
-
-        if (user == null) {
-            //render login page with error message
-            path = path + "/login.html";
-            ctx.setVariable("message", "You must be logged in to view this page");
-            templateEngine.process(path, ctx, response.getWriter());
-        }
 
         try {
             courseId = Integer.parseInt(request.getParameter("courseId"));
         }
         catch (NumberFormatException e) {
-            ctx.setVariable("message", "Invalid course id");
-            templateEngine.process(HOME_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId parameter");
         }
 
         try {
             course = courseDAO.getCourseById(courseId);
-            rounds = roundDAO.getRoundsByCourseId(courseId);
+            if(user.getRole().equals(UserRole.PROFESSOR)) {
+                rounds = roundDAO.getRoundsByCourseId(courseId);
+            } else if (user.getRole().equals(UserRole.STUDENT)) {
+                rounds = roundDAO.getRoundsByCourseIdAndStudentId(courseId, user.getId());
+            }
+            path = path + COURSE_ROUNDS_PAGE;
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving course rounds");
         }
 
         ctx.setVariable("course", course);
         ctx.setVariable("rounds", rounds);
         templateEngine.process(path, ctx, response.getWriter());
+    }
+
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    public void destroy() {
+        try {
+            ConnectionHandler.closeConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

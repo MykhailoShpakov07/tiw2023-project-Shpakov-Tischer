@@ -2,6 +2,10 @@ package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -10,17 +14,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-
-import static com.example.project2023shpakovtischer.utils.Paths.*;
+import static com.example.project2023shpakovtischer.utils.Paths.GET_ROUND_SERVLET;
+import static com.example.project2023shpakovtischer.utils.Paths.REFUSE_MARK_SERVLET;
 
 @WebServlet(name = "RefuseMark", value = REFUSE_MARK_SERVLET)
 public class RefuseMark extends HttpServlet {
@@ -53,20 +52,22 @@ public class RefuseMark extends HttpServlet {
             roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
-            ctx.setVariable("message", "Invalid student id or round id");
-            templateEngine.process(RESULT_PAGE, ctx, response.getWriter());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid studentId or roundId parameter");
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
             attendanceDAO.refuseMark(studentId, roundId);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
-            ctx.setVariable("message", "It was not possible to refuse the mark");
-            templateEngine.process(RESULT_PAGE, ctx, response.getWriter());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "It was not possible to refuse the mark");
         }
-        ctx.setVariable("message", "Mark refused");
-        ctx.setVariable("attendance", attendanceDAO.getAttendance(studentId, roundId));
-        templateEngine.process(RESULT_PAGE, ctx, response.getWriter());
+
+        response.sendRedirect(request.getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 
     public void destroy() {

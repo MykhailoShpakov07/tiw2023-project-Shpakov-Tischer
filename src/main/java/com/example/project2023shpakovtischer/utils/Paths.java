@@ -9,15 +9,17 @@ public class Paths {
     public static final String CHECK_LOGIN_SERVLET = "/check-login";
     public static final String GET_COURSES_SERVLET = "/get-courses";
     public static final String GET_COURSE_ROUNDS_SERVLET = "/get-course-rounds";
+    public static final String GET_ROUND_SERVLET = "/get-round-attendees";
+    public static final String PUBLISH_MARKS_SERVLET = "/professor/publish-marks";
 
 
     public static final String LOGIN_PAGE = "loginPage.html";
     public static final String HOME_PAGE = "/WEB-INF/homePage.html";
-    public static final String COURSE_ROUNDS_PAGE = "/WEB-INF/coursesRoundsPage.html";
+    public static final String COURSE_ROUNDS_PAGE = "/WEB-INF/courseRoundsPage.html";
     public static final String ATTENDEES_PAGE = "/WEB-INF/professorPages/attendeesPage.html";
     public static final String REPORT_PAGE = "/WEB-INF/professorPages/reportPage.html";
     public static final String ASSIGN_MARK_PAGE = "/WEB-INF/professorPages/assignMarkPage.html";
-    public static final String RESULT_PAGE = "/WEB-INF/studentPages/refuseMarkPage.html";
+    public static final String RESULT_PAGE = "/WEB-INF/studentPages/resultPage.html";
 
 
 }

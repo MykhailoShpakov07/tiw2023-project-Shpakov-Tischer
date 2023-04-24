@@ -4,6 +4,7 @@ import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -18,12 +19,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-
-import static com.example.project2023shpakovtischer.utils.Paths.*;
+import static com.example.project2023shpakovtischer.utils.Paths.ASSIGN_MARK_PAGE;
+import static com.example.project2023shpakovtischer.utils.Paths.GET_ASSIGN_MARK_PAGE_SERVLET;
 
 @WebServlet(name = "GetAssignMarkPage", value = GET_ASSIGN_MARK_PAGE_SERVLET)
 public class GetAssignMarkPage extends HttpServlet {
@@ -57,25 +54,29 @@ public class GetAssignMarkPage extends HttpServlet {
             studentId = Integer.parseInt(request.getParameter("studentId"));
             roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
-            ctx.setVariable("message", "Invalid student id or round id");
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId or studentId parameter");
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         AttendanceBean attendance = null;
         try {
-             attendance = attendanceDAO.getAttendance(studentId, roundId);
+             attendance = attendanceDAO.getAttendance(roundId, studentId);
         } catch (UnavailableException e) {
-            System.out.println("UnavailableException:" + e.getMessage());
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while getting attendance");
         }
         if (attendance == null){
-            ctx.setVariable("message", "No attendance found");
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No attendance found for given parameters");
         } else {
             ctx.setVariable("attendance", attendance);
             templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
         }
-        templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
+
+        templateEngine.process(getServletContext().getContextPath() + ASSIGN_MARK_PAGE, ctx, response.getWriter());
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doGet(request, response);
     }
 
     public void destroy() {

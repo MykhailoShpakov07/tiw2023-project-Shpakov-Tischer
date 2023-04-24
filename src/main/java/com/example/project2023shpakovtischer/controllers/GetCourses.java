@@ -51,20 +51,26 @@ public class GetCourses extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
+        String path = getServletContext().getContextPath();
 
         UserBean user = (UserBean) request.getSession().getAttribute("user");
-        String path = getServletContext().getContextPath();
 
         String message = null;
         ArrayList<CourseBean> courses = null;
 
         CourseDAO courseDAO = new CourseDAO(connection);
 
-        if (user.getRole().equals(UserRole.STUDENT)) {
-            courses = courseDAO.getCoursesByStudentId(user.getId());
+        try {
+            if (user.getRole().equals(UserRole.STUDENT)) {
+                courses = courseDAO.getCoursesByStudentId(user.getId());
+            }
+            else if (user.getRole().equals(UserRole.PROFESSOR)) {
+                courses = courseDAO.getCoursesByProfessorId(user.getId());
+            }
         }
-        else if (user.getRole().equals(UserRole.PROFESSOR)) {
-            courses = courseDAO.getCoursesByProfessorId(user.getId());
+        catch (UnavailableException e){
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving courses");
         }
 
         message = "Welcome " + user.getName() + " " + user.getSurname() + "!";

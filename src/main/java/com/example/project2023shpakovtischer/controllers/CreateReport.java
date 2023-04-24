@@ -2,6 +2,10 @@ package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.ReportDAO;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,12 +18,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-
-import static com.example.project2023shpakovtischer.utils.Paths.*;
+import static com.example.project2023shpakovtischer.utils.Paths.CREATE_REPORT_SERVLET;
+import static com.example.project2023shpakovtischer.utils.Paths.REPORT_PAGE;
 
 @WebServlet(name = "CreateReport", value = CREATE_REPORT_SERVLET)
 public class CreateReport extends HttpServlet {
@@ -51,19 +51,23 @@ public class CreateReport extends HttpServlet {
         try {
             roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e) {
-            ctx.setVariable("message", "Invalid round id");
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
         ReportDAO reportDAO = new ReportDAO(connection);
         try {
             reportDAO.createReport(roundId);
 
-        } catch (SQLException e) {
-            ctx.setVariable("message", e.getMessage());
-            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+        } catch (SQLException | UnavailableException e) {
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while creating report");
         }
         ctx.setVariable("message", "Report created successfully");
         templateEngine.process(REPORT_PAGE, ctx, response.getWriter());
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doGet(request, response);
     }
 
     public void destroy() {

@@ -2,11 +2,9 @@ package com.example.project2023shpakovtischer.filters;
 
 
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
-import com.example.project2023shpakovtischer.dao.CourseDAO;
 import com.example.project2023shpakovtischer.dao.RoundDAO;
 import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
-import com.example.project2023shpakovtischer.javaBeans.CourseBean;
 import com.example.project2023shpakovtischer.javaBeans.RoundBean;
 import com.example.project2023shpakovtischer.javaBeans.UserBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
@@ -20,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
 
 @WebFilter(filterName = "HasAccessToRoundChecker")
 public class HasAccessToRoundChecker extends HttpFilter {
@@ -41,7 +38,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         int RoundId = 0;
         try {
-            RoundId = Integer.parseInt(request.getParameter("RoundId"));
+            RoundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e){
             response.sendError(400);
         }

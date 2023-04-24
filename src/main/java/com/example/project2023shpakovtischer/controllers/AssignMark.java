@@ -2,6 +2,10 @@ package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,12 +18,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-
-import static com.example.project2023shpakovtischer.utils.Paths.*;
+import static com.example.project2023shpakovtischer.utils.Paths.ASSIGN_MARK_SERVLET;
+import static com.example.project2023shpakovtischer.utils.Paths.GET_ROUND_SERVLET;
 
 @WebServlet(name = "AssignMark", value = ASSIGN_MARK_SERVLET)
 public class AssignMark extends HttpServlet {
@@ -54,17 +54,22 @@ public class AssignMark extends HttpServlet {
             studentId = Integer.parseInt(request.getParameter("studentId"));
             mark = Integer.parseInt( request.getParameter("mark"));
         } catch (NumberFormatException e) {
-            ctx.setVariable("message", "Invalid student id or round id or mark");
-            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid student id or round id or mark");
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
             attendanceDAO.assignMark(studentId, roundId, mark);
         } catch (UnavailableException e) {
-            System.out.println("UnavailableException:" + e.getMessage());
-            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error while in database while assigning mark");
         }
-        templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
+
+        response.sendRedirect(request.getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        doPost(request, response);
     }
 
     public void destroy() {

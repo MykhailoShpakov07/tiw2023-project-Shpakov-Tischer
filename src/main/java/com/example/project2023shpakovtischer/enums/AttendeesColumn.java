@@ -11,16 +11,20 @@ public enum AttendeesColumn {
         this.name = name;
     }
 
-    public static String getAttendeesColumnFromInt(int value){
+    public static AttendeesColumn getAttendeesColumnFromInt(int value){
         switch (value){
-            case 0: return STUDENT_ID.name();
-            case 1: return NAME.name();
-            case 2: return SURNAME.name();
-            case 3: return EMAIL.name();
-            case 4: return STUDY_COURSE.name();
-            case 5: return MARK.name();
-            case 6: return EVALUATION_STATUS.name();
+            case 0: return STUDENT_ID;
+            case 1: return NAME;
+            case 2: return SURNAME;
+            case 3: return EMAIL;
+            case 4: return STUDY_COURSE;
+            case 5: return MARK;
+            case 6: return EVALUATION_STATUS;
             default: throw new IllegalArgumentException("The attendeesColumn doesn`t exist for this value");
         }
+    }
+
+    public String getName(){
+        return this.name;
     }
 }

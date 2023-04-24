@@ -92,7 +92,6 @@ public class AttendanceDAO {
             }
         } catch (SQLException e) {
             closeResultAndStatement(resultSet, preparedStatement);
-
             throw new UnavailableException(e.getMessage());
         }
 
@@ -127,7 +126,6 @@ public class AttendanceDAO {
         }
         catch (SQLException e) {
             closeStatement(preparedStatement);
-
             throw new UnavailableException(e.getMessage());
         }
 
