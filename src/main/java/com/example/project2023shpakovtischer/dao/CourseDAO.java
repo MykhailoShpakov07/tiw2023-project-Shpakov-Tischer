@@ -19,7 +19,6 @@ public class CourseDAO {
     private static final String GET_COURSE_BY_ID = "SELECT * FROM course WHERE courseId = ?";
     private static final String GET_COURSES_BY_PROFESSOR_ID = "SELECT * FROM course WHERE profid = ?";
     private static final String GET_COURSES_BY_STUDENT_ID = "SELECT DISTINCT courseId, name FROM ( attends join round ) join course WHERE studentId = ?";
-
     private static final String GET_COURSE_BY_ROUND_ID = "SELECT name FROM course JOIN round WHERE roundId = ?";
 
     public CourseBean getCourseById(int id) throws UnavailableException {
@@ -78,7 +77,7 @@ public class CourseDAO {
             while (resultSet.next()) {
                 CourseBean course = new CourseBean();
                 course.setId(resultSet.getInt("courseId"));
-                course.setName(resultSet.getString("courseName"));
+                course.setName(resultSet.getString("name"));
                 courses.add(course);
             }
         } catch (SQLException e) {
