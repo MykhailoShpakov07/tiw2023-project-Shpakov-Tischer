@@ -62,7 +62,7 @@ public class AssignMark extends HttpServlet {
             attendanceDAO.assignMark(roundId, studentId, mark);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error while in database while assigning mark");
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while assigning mark");
         }
 
         response.sendRedirect(request.getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
