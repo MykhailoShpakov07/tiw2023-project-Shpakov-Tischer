@@ -54,6 +54,9 @@ public class CreateReport extends HttpServlet {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
+
+        //TODO verify if the report if already created and act respectively
+        // if it`s allowed to create the report (all marks were published)
         ReportDAO reportDAO = new ReportDAO(connection);
         try {
             reportDAO.createReport(roundId);

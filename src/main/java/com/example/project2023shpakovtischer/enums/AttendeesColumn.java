@@ -27,4 +27,8 @@ public enum AttendeesColumn {
     public String getName(){
         return this.name;
     }
+
+    public int getValue(){
+        return this.value;
+    }
 }

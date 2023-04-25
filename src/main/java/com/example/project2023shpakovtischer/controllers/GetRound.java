@@ -1,15 +1,12 @@
 package com.example.project2023shpakovtischer.controllers;
 
-import com.example.project2023shpakovtischer.dao.AttendanceDAO;
-import com.example.project2023shpakovtischer.dao.CourseDAO;
-import com.example.project2023shpakovtischer.dao.RoundDAO;
-import com.example.project2023shpakovtischer.dao.UserDAO;
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
+import com.example.project2023shpakovtischer.beans.CourseBean;
+import com.example.project2023shpakovtischer.beans.RoundBean;
+import com.example.project2023shpakovtischer.beans.UserBean;
+import com.example.project2023shpakovtischer.dao.*;
 import com.example.project2023shpakovtischer.enums.AttendeesColumn;
 import com.example.project2023shpakovtischer.enums.UserRole;
-import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
-import com.example.project2023shpakovtischer.javaBeans.CourseBean;
-import com.example.project2023shpakovtischer.javaBeans.RoundBean;
-import com.example.project2023shpakovtischer.javaBeans.UserBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -32,7 +29,7 @@ import java.util.Optional;
 import static com.example.project2023shpakovtischer.utils.Paths.*;
 
 
-@WebServlet(name = "GetRoundAttendees", value = GET_ROUND_SERVLET)
+@WebServlet(name = "GetRound", value = GET_ROUND_SERVLET)
 public class GetRound extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -74,10 +71,14 @@ public class GetRound extends HttpServlet {
 
         if (user.getRole().equals(UserRole.PROFESSOR)){
             //process request for the professor
-            Optional<AttendeesColumn> optOrderLabel = null;
-            Optional<Boolean> optReverse;
+            Optional<AttendeesColumn> optOrderLabel = Optional.empty();
+            Optional<Boolean> optReverse = Optional.empty();
             AttendeesColumn orderLabel;
             Boolean reverse;
+            //var that tells whether the marks for this round can be published
+            Boolean canBePublished = false;
+            //var that tells the status of the report, 0 - can`t be published, 1-can be created, 2-already exists
+            int reportStatus = 0;
 
             try {
                 optOrderLabel = Optional.ofNullable(request.getParameter("orderLabel"))
@@ -116,11 +117,26 @@ public class GetRound extends HttpServlet {
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
             RoundDAO roundDAO = new RoundDAO(connection);
             CourseDAO courseDAO = new CourseDAO(connection);
+            ReportDAO reportDAO = new ReportDAO(connection);
 
             try {
                 attendances = attendanceDAO.getOrderedAttendances(roundId, orderLabel.getName(), reverse);
                 round = roundDAO.getRoundById(roundId);
                 course = courseDAO.getCourseByRoundId(roundId);
+
+                //do set of controls to allow user to publish marks or create report
+                if(reportDAO.canBeReported(roundId) && !attendances.isEmpty()){
+                    reportStatus = 1;
+                    canBePublished = false;
+                }
+                else if (reportDAO.getReportByRoundId(roundId) != null) {
+                    reportStatus = 2;
+                    canBePublished = false;
+                }
+                else{
+                    reportStatus = 0;
+                    canBePublished = attendanceDAO.canBePublished(roundId);
+                }
             }
             catch (UnavailableException e){
                 System.out.println(e.getMessage());
@@ -128,11 +144,18 @@ public class GetRound extends HttpServlet {
             }
 
             path = path + ATTENDEES_PAGE;
+            ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
             ctx.setVariable("orderLabel", orderLabel.getName());
-            ctx.setVariable("reverse", reverse);
+            ctx.setVariable("reverse", !reverse);
             ctx.setVariable("attendances", attendances);
             ctx.setVariable("round", round);
             ctx.setVariable("course", course);
+            ctx.setVariable("canBePublished", canBePublished);
+            ctx.setVariable("reportStatus", reportStatus);
+            ctx.setVariable("getRoundServletPath", GET_ROUND_SERVLET);
+            ctx.setVariable("getAssignMarkPageServletPath", GET_ASSIGN_MARK_PAGE_SERVLET);
+            ctx.setVariable("publishMarksServletPath", PUBLISH_MARKS_SERVLET);
+            ctx.setVariable("createReportServletPath", CREATE_REPORT_SERVLET);
             templateEngine.process(path, ctx, response.getWriter());
 
         }
@@ -160,10 +183,13 @@ public class GetRound extends HttpServlet {
             }
 
             path = path + RESULT_PAGE;
+
+            ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
             ctx.setVariable("attendance", attendance);
             ctx.setVariable("round", round);
             ctx.setVariable("course", course);
             ctx.setVariable("prof", prof);
+            ctx.setVariable("getRoundServletPath", GET_ROUND_SERVLET);
             templateEngine.process(path, ctx, response.getWriter());
         }
 

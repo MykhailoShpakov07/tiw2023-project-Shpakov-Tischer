@@ -1,6 +1,6 @@
 package com.example.project2023shpakovtischer.dao;
 
-import com.example.project2023shpakovtischer.javaBeans.CourseBean;
+import com.example.project2023shpakovtischer.beans.CourseBean;
 
 import javax.servlet.UnavailableException;
 import java.sql.Connection;
@@ -31,7 +31,7 @@ public class CourseDAO {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 course.setId(resultSet.getInt("courseId"));
-                course.setName(resultSet.getString("courseName"));
+                course.setName(resultSet.getString("name"));
             }
             else{
                 return null;
@@ -99,7 +99,7 @@ public class CourseDAO {
             while (resultSet.next()) {
                 CourseBean course = new CourseBean();
                 course.setId(resultSet.getInt("courseId"));
-                course.setName(resultSet.getString("courseName"));
+                course.setName(resultSet.getString("name"));
                 courses.add(course);
             }
         } catch (SQLException e) {

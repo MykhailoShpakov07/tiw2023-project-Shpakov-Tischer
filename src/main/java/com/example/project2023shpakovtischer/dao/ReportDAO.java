@@ -1,6 +1,6 @@
 package com.example.project2023shpakovtischer.dao;
 
-import com.example.project2023shpakovtischer.javaBeans.ReportBean;
+import com.example.project2023shpakovtischer.beans.ReportBean;
 
 import javax.servlet.UnavailableException;
 import java.sql.Connection;
@@ -16,8 +16,7 @@ public class ReportDAO {
     private static final String UPDATE_MARK_ON_REFUSED_ATTENDANCES = "UPDATE attends SET mark = 16 WHERE roundId = ?";
     private static final String CREATE_REPORT = "UPDATE round SET reportIsCreated = 1, reportDateTime = NOW() WHERE roundId = ?";
     private static final String GET_REPORT_BY_ROUND_ID = "SELECT reportCode, reportDateTime, name, date FROM round join course WHERE roundId = ? AND reportIsCreated = 1";
-
-
+    private static final String CAN_BE_REPORTED = "SELECT * FROM attends WHERE evaluationStatus != 2 and evaluationStatus != 3 and roundId = ?";
 
     public ReportDAO(Connection connection) {
         this.connection = connection;
@@ -102,6 +101,20 @@ public class ReportDAO {
 
         closeResultAndStatement(resultSet, preparedStatement);
         return report;
+    }
+
+    public boolean canBeReported(int roundId) throws UnavailableException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        try {
+            preparedStatement = connection.prepareStatement(CAN_BE_REPORTED);
+            preparedStatement.setInt(1, roundId);
+            resultSet = preparedStatement.executeQuery();
+            return !resultSet.isBeforeFirst();
+        }
+        catch (SQLException ex){
+            throw new UnavailableException(ex.getMessage());
+        }
     }
 
 

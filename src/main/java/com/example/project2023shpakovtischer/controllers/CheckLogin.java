@@ -1,7 +1,7 @@
 package com.example.project2023shpakovtischer.controllers;
 
+import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.dao.UserDAO;
-import com.example.project2023shpakovtischer.javaBeans.UserBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;

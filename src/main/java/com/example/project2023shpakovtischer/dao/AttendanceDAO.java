@@ -1,8 +1,8 @@
 package com.example.project2023shpakovtischer.dao;
 
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
 import com.example.project2023shpakovtischer.enums.EvaluationStatus;
 import com.example.project2023shpakovtischer.enums.Mark;
-import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
 
 import javax.servlet.UnavailableException;
 import java.sql.Connection;
@@ -16,16 +16,17 @@ public class AttendanceDAO {
     private Connection connection;
 
     private static final String GET_ATTENDANCES_BY_ROUND_ID_ORDERED_BY = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
-            "FROM attends join user on studentId = userId WHERE roundId = ? ";
+            "FROM attends join user on studentId = userId WHERE roundId = ? ORDER BY ";
     private static final String GET_ATTENDANCE_BY_ROUND_ID_AND_STUDENT_ID = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
             "FROM attends join user on studentId = userId WHERE roundId = ? AND studentId = ?";
-    private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = 1 WHERE roundId = ? AND studentId = ?";
+    private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = ? WHERE roundId = ? AND studentId = ?";
     private static final String PUBLISH_MARKS = "UPDATE attends SET evaluationStatus = 2 WHERE roundId = ? and evaluationStatus = 1";
     private static final String REFUSE_MARK = "UPDATE attends SET evaluationStatus = 3 WHERE studentId = ? AND roundId = ?";
     private static final String CREATE_VIEW_ROUNDS_ON_NEXT_DATES = "CREATE OR REPLACE VIEW SameCourseNextDate AS " +
             "SELECT roundId FROM round WHERE courseId = (SELECT courseId FROM round WHERE roundId = ?) AND date > (SELECT date FROM round WHERE roundId = ?) ";
     private static final String DELETE_FURTHER_ATTENDANCES = "DELETE FROM attends WHERE (studentId, roundId ) in (SELECT studentId, roundId FROM attends join SameCourseNextDate " +
             "WHERE roundId = ? and mark between 18 and 31)";
+    private static final String CAN_BE_PUBLISHED = "SELECT * FROM attends WHERE roundId=? and evaluationStatus = 1";
 
 
     public AttendanceDAO(Connection connection){
@@ -49,12 +50,12 @@ public class AttendanceDAO {
             while (resultSet.next()) {
                 AttendanceBean attendance = new AttendanceBean();
                 attendance.setStudentId(resultSet.getInt("studentId"));
-                attendance.setRoundId(resultSet.getInt("roundId"));
+                attendance.setRoundId(roundId);
                 attendance.setStudentName(resultSet.getString("name"));
                 attendance.setStudentSurname(resultSet.getString("surname"));
                 attendance.setStudentEmail(resultSet.getString("email"));
                 attendance.setStudentStudyCourse(resultSet.getString("studyCourse"));
-                attendance.setMark(Mark.getUserRoleFromInt(resultSet.getInt("mark")));
+                attendance.setMark(Mark.getMarkFromInt(resultSet.getInt("mark")));
                 attendance.setEvaluationStatus(EvaluationStatus.getEvaluationStatusFromInt(resultSet.getInt("evaluationStatus")));
                 attendances.add(attendance);
             }
@@ -67,6 +68,20 @@ public class AttendanceDAO {
         closeResultAndStatement(resultSet, preparedStatement);
 
         return attendances;
+    }
+
+    public boolean canBePublished(int roundId) throws UnavailableException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet;
+        try {
+            preparedStatement = connection.prepareStatement(CAN_BE_PUBLISHED);
+            preparedStatement.setInt(1, roundId);
+            resultSet = preparedStatement.executeQuery();
+            return resultSet.isBeforeFirst();
+        }
+        catch (SQLException ex){
+            throw new UnavailableException(ex.getMessage());
+        }
     }
 
     public AttendanceBean getAttendance(int roundId, int studentId) throws UnavailableException {
@@ -82,12 +97,12 @@ public class AttendanceDAO {
             if (resultSet.next()) {
                 attendance = new AttendanceBean();
                 attendance.setStudentId(resultSet.getInt("studentId"));
-                attendance.setRoundId(resultSet.getInt("roundId"));
+                attendance.setRoundId(roundId);
                 attendance.setStudentName(resultSet.getString("name"));
                 attendance.setStudentSurname(resultSet.getString("surname"));
                 attendance.setStudentEmail(resultSet.getString("email"));
                 attendance.setStudentStudyCourse(resultSet.getString("studyCourse"));
-                attendance.setMark(Mark.getUserRoleFromInt(resultSet.getInt("mark")));
+                attendance.setMark(Mark.getMarkFromInt(resultSet.getInt("mark")));
                 attendance.setEvaluationStatus(EvaluationStatus.getEvaluationStatusFromInt(resultSet.getInt("evaluationStatus")));
             }
         } catch (SQLException e) {
@@ -104,9 +119,10 @@ public class AttendanceDAO {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(ASSIGN_MARK);
-            preparedStatement.setInt(1, markValue);
-            preparedStatement.setInt(2, roundId);
-            preparedStatement.setInt(3, studentId);
+            preparedStatement.setObject(1, markValue == 0 ? null:markValue);
+            preparedStatement.setInt(2, markValue == 0 ? 0:1);
+            preparedStatement.setInt(3, roundId);
+            preparedStatement.setInt(4, studentId);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {

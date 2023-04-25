@@ -1,4 +1,4 @@
-package com.example.project2023shpakovtischer.javaBeans;
+package com.example.project2023shpakovtischer.beans;
 
 import com.example.project2023shpakovtischer.enums.EvaluationStatus;
 import com.example.project2023shpakovtischer.enums.Mark;

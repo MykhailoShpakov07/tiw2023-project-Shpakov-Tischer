@@ -1,7 +1,8 @@
 package com.example.project2023shpakovtischer.controllers;
 
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
-import com.example.project2023shpakovtischer.javaBeans.AttendanceBean;
+import com.example.project2023shpakovtischer.enums.Mark;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -19,8 +20,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.example.project2023shpakovtischer.utils.Paths.ASSIGN_MARK_PAGE;
-import static com.example.project2023shpakovtischer.utils.Paths.GET_ASSIGN_MARK_PAGE_SERVLET;
+import static com.example.project2023shpakovtischer.utils.Paths.*;
 
 @WebServlet(name = "GetAssignMarkPage", value = GET_ASSIGN_MARK_PAGE_SERVLET)
 public class GetAssignMarkPage extends HttpServlet {
@@ -67,11 +67,11 @@ public class GetAssignMarkPage extends HttpServlet {
         }
         if (attendance == null){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No attendance found for given parameters");
-        } else {
-            ctx.setVariable("attendance", attendance);
-            templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
         }
 
+        ctx.setVariable("assignMarkServletPath", ASSIGN_MARK_SERVLET);
+        ctx.setVariable("marks", Mark.values());
+        ctx.setVariable("attendance", attendance);
         templateEngine.process(getServletContext().getContextPath() + ASSIGN_MARK_PAGE, ctx, response.getWriter());
     }
 

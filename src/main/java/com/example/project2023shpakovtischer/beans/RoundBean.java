@@ -1,4 +1,4 @@
-package com.example.project2023shpakovtischer.javaBeans;
+package com.example.project2023shpakovtischer.beans;
 
 import java.sql.Date;
 

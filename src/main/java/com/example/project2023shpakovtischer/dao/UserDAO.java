@@ -1,7 +1,7 @@
 package com.example.project2023shpakovtischer.dao;
 
+import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.enums.UserRole;
-import com.example.project2023shpakovtischer.javaBeans.UserBean;
 
 import javax.servlet.UnavailableException;
 import java.sql.Connection;

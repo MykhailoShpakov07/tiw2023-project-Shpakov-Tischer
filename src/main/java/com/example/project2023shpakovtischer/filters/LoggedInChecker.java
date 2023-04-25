@@ -1,6 +1,6 @@
 package com.example.project2023shpakovtischer.filters;
 
-import com.example.project2023shpakovtischer.javaBeans.UserBean;
+import com.example.project2023shpakovtischer.beans.UserBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

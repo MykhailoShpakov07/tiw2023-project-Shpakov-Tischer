@@ -5,6 +5,80 @@
     <title>Attendees Page</title>
 </head>
 <body>
+    <h1>Attendees Page Template</h1>
 
+    <h2 th:text="'Nome del corso: ' + ${course.name}">Course Name</h2>
+    <h3 th:text="'Data dell`appello: ' + ${round.date}">Round Date</h3>
+    <table>
+        <thead>
+        <tr>
+            <th th:each="columnName: ${columnNames}">
+                <a th:href="@{${getRoundServletPath}(roundId=${round.id},
+                        orderLabel=${columnName.getValue()},
+                        reverse=${(orderLabel.equals(columnName.getName())) and reverse})}"
+                   th:text="${columnName.getName()}">
+                    Link
+                </a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="attendance : ${attendances}">
+            <td>
+                <p th:text="${attendance.studentId}">
+                    student id
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.studentName}">
+                    student name
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.studentSurname}">
+                    student surname
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.studentEmail}">
+                    student email
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.studentStudyCourse}">
+                    student study course
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.mark}">
+                    mark
+                </p>
+            </td>
+            <td>
+                <p th:text="${attendance.evaluationStatus}">
+                    evaluation status
+                </p>
+            </td>
+            <td>
+                <a th:if="${attendance.evaluationStatus.getValue() < 2}"
+                   th:href="@{${getAssignMarkPageServletPath}(studentId=${attendance.studentId}, roundId=${round.id})}">
+                    Edit
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button th:if="${canBePublished}">
+        <a th:href="@{${publishMarksServletPath}(roundId=${round.id})}">
+            PUBLISH MARKS
+        </a>
+    </button>
+
+    <button th:if="${reportStatus!=0}">
+        <a th:href="@{${createReportServletPath}(roundId=${round.id})}" th:text="${reportStatus == 1 ? 'CREATE REPORT': (reportStatus == 2 ? 'VIEW REPORT':'error report status')}">
+            DEFAULT CREATE REPORT TEXT
+        </a>
+    </button>
 </body>
 </html>

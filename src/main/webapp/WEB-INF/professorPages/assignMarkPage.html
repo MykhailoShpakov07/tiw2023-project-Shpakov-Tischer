@@ -2,9 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Assign Mark Page</title>
 </head>
 <body>
+    <h1>Assign mark template</h1>
+    <div>
+        <p th:text="'Matricola: ' + ${attendance.studentId}">
+            StudentID
+        </p>
+        <p th:text="'Nome: ' + ${attendance.studentName}">
+            Name
+        </p>
+        <p th:text="'Cognome: ' + ${attendance.studentSurname}">
+            StudentID
+        </p>
+        <p th:text="'Email: ' + ${attendance.studentEmail}">
+            Name
+        </p>
+        <p th:text="'Corso di Laurea: ' + ${attendance.studentStudyCourse}">
+            StudentID
+        </p>
+    </div>
+    <form th:action="${assignMarkServletPath}" method="post">
+        <select name="mark" required>
+            <option th:each="mark: ${marks}"
+                    th:value="${mark.getValue()}"
+                    th:text="${mark}"
+                    th:selected="${mark.equals(attendance.mark)}">
 
+            </option>
+        </select>
+        <input type="hidden" name="roundId" th:value="${attendance.roundId}" />
+        <input type="hidden" name="studentId" th:value="${attendance.studentId}" />
+        <input type="submit" value="Inserisci voto" />
+    </form>
 </body>
 </html>

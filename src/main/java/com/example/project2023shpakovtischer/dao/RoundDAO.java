@@ -1,6 +1,6 @@
 package com.example.project2023shpakovtischer.dao;
 
-import com.example.project2023shpakovtischer.javaBeans.RoundBean;
+import com.example.project2023shpakovtischer.beans.RoundBean;
 
 import javax.servlet.UnavailableException;
 import java.sql.Connection;

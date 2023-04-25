@@ -1,11 +1,11 @@
 package com.example.project2023shpakovtischer.controllers;
 
+import com.example.project2023shpakovtischer.beans.CourseBean;
+import com.example.project2023shpakovtischer.beans.RoundBean;
+import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.dao.CourseDAO;
 import com.example.project2023shpakovtischer.dao.RoundDAO;
 import com.example.project2023shpakovtischer.enums.UserRole;
-import com.example.project2023shpakovtischer.javaBeans.CourseBean;
-import com.example.project2023shpakovtischer.javaBeans.RoundBean;
-import com.example.project2023shpakovtischer.javaBeans.UserBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -24,8 +24,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.example.project2023shpakovtischer.utils.Paths.COURSE_ROUNDS_PAGE;
-import static com.example.project2023shpakovtischer.utils.Paths.GET_COURSE_ROUNDS_SERVLET;
+import static com.example.project2023shpakovtischer.utils.Paths.*;
 
 @WebServlet(name = "GetCourseRounds", value = GET_COURSE_ROUNDS_SERVLET)
 public class GetCourseRounds extends HttpServlet {
@@ -84,6 +83,7 @@ public class GetCourseRounds extends HttpServlet {
         }
 
         ctx.setVariable("course", course);
+        ctx.setVariable("getRoundServletPath", GET_ROUND_SERVLET);
         ctx.setVariable("rounds", rounds);
         templateEngine.process(path, ctx, response.getWriter());
     }

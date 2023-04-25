@@ -5,12 +5,12 @@ public class Paths {
     public static final String CREATE_REPORT_SERVLET = "/professor/create-report";
     public static final String GET_ASSIGN_MARK_PAGE_SERVLET = "/professor/get-assign-mark-page";
     public static final String ASSIGN_MARK_SERVLET = "/professor/assign-mark";
+    public static final String PUBLISH_MARKS_SERVLET = "/professor/publish-marks";
     public static final String REFUSE_MARK_SERVLET = "/student/refuse-mark";
     public static final String CHECK_LOGIN_SERVLET = "/check-login";
     public static final String GET_COURSES_SERVLET = "/get-courses";
     public static final String GET_COURSE_ROUNDS_SERVLET = "/get-course-rounds";
-    public static final String GET_ROUND_SERVLET = "/get-round-attendees";
-    public static final String PUBLISH_MARKS_SERVLET = "/professor/publish-marks";
+    public static final String GET_ROUND_SERVLET = "/get-round";
 
 
     public static final String LOGIN_PAGE = "loginPage.html";

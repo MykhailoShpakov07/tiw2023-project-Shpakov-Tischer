@@ -1,12 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>HomePage</title>
+        <title>Courses</title>
     </head>
     <body>
         <h1 th:text="${message}"></h1>
-        <h2>Select the course you want to open</h2>
-        <a th:each="course : ${courses}"
-           th:href=""
-           th:text="${course.name}">
-        </a>
+        <h2>Courses Template</h2>
+        <ul>
+            <li th:each="course : ${courses}">
+                <a th:href="@{${getCourseRoundsServletPath}(courseId=${course.id})}" th:text="${course.name}" >
+                    Link
+                </a>
+            </li>
+        </ul>
     </body>
+</html>

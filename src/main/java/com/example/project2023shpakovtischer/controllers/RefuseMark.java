@@ -56,6 +56,7 @@ public class RefuseMark extends HttpServlet {
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
+            //TODO control evaluation status before executing this servlet
             attendanceDAO.refuseMark(studentId, roundId);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());

@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Course Rounds</title>
 </head>
 <body>
+    <h1>Course Rounds Template</h1>
+    <p>Course Rounds for course: <span th:text="${course.name}"></span></p>
+    <p>Course id is: <span th:text="${course.id}"></span></p>
 
+    <ul>
+        <li th:each="round : ${rounds}">
+            <a th:href="@{${getRoundServletPath}(roundId=${round.id})}" th:text="${round.date}" >
+                Link
+            </a>
+        </li>
+    </ul>
 </body>
 </html>

@@ -11,7 +11,7 @@ public enum Mark {
         this.value = value;
     }
 
-    public static Mark getUserRoleFromInt(int value){
+    public static Mark getMarkFromInt(int value){
         switch (value){
             case 0: return NON_DEFINITO;
             case 15: return ASSENTE;
@@ -35,4 +35,23 @@ public enum Mark {
         }
     }
 
+    public int getValue(){
+        return this.value;
+    }
+
+    @Override
+    public String toString() {
+        if (this.value >= 18 && this.value <= 30 )
+            return "" + this.value;
+        else {
+            switch (this.value){
+                case 0: return "Non definito";
+                case 15: return "Assente";
+                case 16: return "Rimandato";
+                case 17: return "Riprovato";
+                case 31: return "30 e Lode";
+                default: return "error !";
+            }
+        }
+    }
 }

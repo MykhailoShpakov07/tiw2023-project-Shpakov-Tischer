@@ -47,6 +47,7 @@ public class PublishMarks extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
 
+        //TODO verify if it`s allowed to publish marks of this round
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
             attendanceDAO.publishMarks(roundId);

@@ -19,4 +19,8 @@ public enum EvaluationStatus {
             default: throw new IllegalArgumentException("The evaluationStatus doesn`t exist for this value");
         }
     }
+
+    public int getValue(){
+        return this.value;
+    }
 }
