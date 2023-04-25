@@ -11,61 +11,61 @@
     <h3 th:text="'Data dell`appello: ' + ${round.date}">Round Date</h3>
     <table>
         <thead>
-        <tr>
-            <th th:each="columnName: ${columnNames}">
-                <a th:href="@{${getRoundServletPath}(roundId=${round.id},
-                        orderLabel=${columnName.getValue()},
-                        reverse=${(orderLabel.equals(columnName.getName())) and reverse})}"
-                   th:text="${columnName.getName()}">
-                    Link
-                </a>
-            </th>
-        </tr>
+            <tr>
+                <th th:each="columnName: ${columnNames}">
+                    <a th:href="@{${getRoundServletPath}(roundId=${round.id},
+                            orderLabel=${columnName.getValue()},
+                            reverse=${(orderLabel.equals(columnName.getName())) and reverse})}"
+                       th:text="${columnName.getName()}">
+                        Link
+                    </a>
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <tr th:each="attendance : ${attendances}">
-            <td>
-                <p th:text="${attendance.studentId}">
-                    student id
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.studentName}">
-                    student name
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.studentSurname}">
-                    student surname
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.studentEmail}">
-                    student email
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.studentStudyCourse}">
-                    student study course
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.mark}">
-                    mark
-                </p>
-            </td>
-            <td>
-                <p th:text="${attendance.evaluationStatus}">
-                    evaluation status
-                </p>
-            </td>
-            <td>
-                <a th:if="${attendance.evaluationStatus.getValue() < 2}"
-                   th:href="@{${getAssignMarkPageServletPath}(studentId=${attendance.studentId}, roundId=${round.id})}">
-                    Edit
-                </a>
-            </td>
-        </tr>
+            <tr th:each="attendance : ${attendances}">
+                <td>
+                    <p th:text="${attendance.studentId}">
+                        student id
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.studentName}">
+                        student name
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.studentSurname}">
+                        student surname
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.studentEmail}">
+                        student email
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.studentStudyCourse}">
+                        student study course
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.mark}">
+                        mark
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${attendance.evaluationStatus}">
+                        evaluation status
+                    </p>
+                </td>
+                <td>
+                    <a th:if="${attendance.evaluationStatus.getValue() < 2}"
+                       th:href="@{${getAssignMarkPageServletPath}(studentId=${attendance.studentId}, roundId=${round.id})}">
+                        Edit
+                    </a>
+                </td>
+            </tr>
         </tbody>
     </table>
 

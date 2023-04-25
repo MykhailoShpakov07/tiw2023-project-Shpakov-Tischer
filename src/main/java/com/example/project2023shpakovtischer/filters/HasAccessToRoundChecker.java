@@ -1,12 +1,12 @@
 package com.example.project2023shpakovtischer.filters;
 
 
-import com.example.project2023shpakovtischer.beans.AttendanceBean;
-import com.example.project2023shpakovtischer.beans.RoundBean;
-import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.dao.RoundDAO;
 import com.example.project2023shpakovtischer.enums.UserRole;
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
+import com.example.project2023shpakovtischer.beans.RoundBean;
+import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 
 import javax.servlet.FilterChain;

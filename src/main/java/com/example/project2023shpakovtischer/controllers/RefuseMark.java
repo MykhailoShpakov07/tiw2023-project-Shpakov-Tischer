@@ -1,5 +1,6 @@
 package com.example.project2023shpakovtischer.controllers;
 
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
@@ -56,13 +57,19 @@ public class RefuseMark extends HttpServlet {
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
-            //TODO control evaluation status before executing this servlet
+            AttendanceBean attendance = attendanceDAO.getAttendance(studentId, roundId);
+            if (attendance.getEvaluationStatus().getValue() == 3) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The mark has already been refused");
+            } else if (attendance.getEvaluationStatus().getValue() == 4) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The mark has already been reported");
+            } else if (attendance.getEvaluationStatus().getValue() < 2) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "It is not possible to refuse the mark at this time");
+            }
             attendanceDAO.refuseMark(studentId, roundId);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "It was not possible to refuse the mark");
         }
-
         response.sendRedirect(request.getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
     }
 

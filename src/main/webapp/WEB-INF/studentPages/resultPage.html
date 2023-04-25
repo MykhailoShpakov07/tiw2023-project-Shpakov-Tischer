@@ -6,5 +6,27 @@
 </head>
 <body>
     <h1>Result Template</h1>
+    <h2 th:if="${attendance.evaluationStatus.getValue()<2}">Voto non ancora definito</h2>
+    <div th:if="${attendance.evaluationStatus.getValue()>=2}">
+        <h2 th:text="'Nome del corso: ' + ${course.name}">Course Name</h2>
+        <h3 th:text="'Data dell`appello: ' + ${round.date}">Round Date</h3>
+        <p th:text="'Nome del professore: ' + ${professor.name}">Professor Name</p>
+        <p th:text="'Cognome del professore: ' + ${professor.surname}">Professor Surname</p>
+        <p th:text="'Email del professore: ' + ${professor.email}">Professor Email</p>
+        <p th:text="'Matricola dello studente: ' + ${attendance.getStudentId()}">StudentId</p>
+        <p th:text="'Nome dello studente: ' + ${attendance.studentName}">Student Name</p>
+        <p th:text="'Cognome dello studente: ' + ${attendance.studentSurname}">Student Surname</p>
+        <p th:text="'Email dello studente: ' + ${attendance.studentEmail}">Student Email</p>
+        <p th:text="'Corso di studi dello studente: ' + ${attendance.studentStudyCourse}">Student Study Course</p>
+        <p th:text="'Voto: ' + ${attendance.mark}">Mark</p>
+        <button th:if="${attendance.getEvaluationStatus()==2}">
+            <a th:href="@{${refuseMarkServletPath}(roundId=${round.id}, studentId=${attendance.studentId})}">
+                RIFIUTA
+            </a>
+        </button>
+        <p th:if="${attendance.getEvaluationStatus()==3}">Il voto è stato rifiutato</p>
+    </div>
+
+
 </body>
 </html>

@@ -184,12 +184,11 @@ public class GetRound extends HttpServlet {
 
             path = path + RESULT_PAGE;
 
-            ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
             ctx.setVariable("attendance", attendance);
             ctx.setVariable("round", round);
             ctx.setVariable("course", course);
-            ctx.setVariable("prof", prof);
-            ctx.setVariable("getRoundServletPath", GET_ROUND_SERVLET);
+            ctx.setVariable("professor", prof);
+            ctx.setVariable("refuseMarkServletPath", REFUSE_MARK_SERVLET);
             templateEngine.process(path, ctx, response.getWriter());
         }
 

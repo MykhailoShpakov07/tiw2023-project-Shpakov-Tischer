@@ -11,11 +11,11 @@
     </context-param>
     <context-param>
         <param-name>dbUser</param-name>
-        <param-value>root</param-value>
+        <param-value>java</param-value>
     </context-param>
     <context-param>
         <param-name>dbPassword</param-name>
-        <param-value>BARBEDBEE</param-value>
+        <param-value>password</param-value>
     </context-param>
     <context-param>
         <param-name>dbDriver</param-name>
@@ -30,6 +30,8 @@
         <url-pattern></url-pattern>
     </filter-mapping>-->
     <welcome-file-list>
-        <welcome-file>login.html</welcome-file>
+        <welcome-file>
+            loginPage.html
+        </welcome-file>
     </welcome-file-list>
 </web-app>

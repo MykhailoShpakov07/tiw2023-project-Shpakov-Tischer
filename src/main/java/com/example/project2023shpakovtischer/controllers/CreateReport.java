@@ -1,6 +1,10 @@
 package com.example.project2023shpakovtischer.controllers;
 
+import com.example.project2023shpakovtischer.beans.AttendanceBean;
+import com.example.project2023shpakovtischer.beans.ReportBean;
+import com.example.project2023shpakovtischer.dao.AttendanceDAO;
 import com.example.project2023shpakovtischer.dao.ReportDAO;
+import com.example.project2023shpakovtischer.enums.AttendeesColumn;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.project2023shpakovtischer.utils.Paths.CREATE_REPORT_SERVLET;
 import static com.example.project2023shpakovtischer.utils.Paths.REPORT_PAGE;
@@ -55,18 +61,37 @@ public class CreateReport extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
 
-        //TODO verify if the report if already created and act respectively
-        // if it`s allowed to create the report (all marks were published)
-        ReportDAO reportDAO = new ReportDAO(connection);
-        try {
-            reportDAO.createReport(roundId);
 
-        } catch (SQLException | UnavailableException e) {
-            System.out.println(e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while creating report");
+        ReportDAO reportDAO = new ReportDAO(connection);
+        AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
+        List<AttendanceBean> attendances = null;
+        ReportBean report = reportDAO.getReportByRoundId(roundId);
+
+        try {
+            attendances = attendanceDAO.getOrderedAttendances(roundId, AttendeesColumn.STUDENT_ID.getName(), false);
+
+            //do set of controls to allow user to create report
+            if(reportDAO.canBeReported(roundId) && !attendances.isEmpty()){
+                try {
+                    reportDAO.createReport(roundId);
+                    showReportPage(response, ctx, attendances, reportDAO.getReportByRoundId(roundId));
+
+                } catch (SQLException | UnavailableException e) {
+                    System.out.println(e.getMessage());
+                    response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while creating report");
+                }
+            }
+            else if (report != null) {
+                showReportPage(response, ctx, attendances, report);
+            }
+            else{
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Report cannot be created at this time");
+            }
         }
-        ctx.setVariable("message", "Report created successfully");
-        templateEngine.process(REPORT_PAGE, ctx, response.getWriter());
+        catch (UnavailableException e){
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -79,5 +104,17 @@ public class CreateReport extends HttpServlet {
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    private void showReportPage(HttpServletResponse response, WebContext ctx, List<AttendanceBean> attendances, ReportBean report) throws IOException {
+        ArrayList<AttendeesColumn> columnNames = new ArrayList<>();
+        columnNames.add(AttendeesColumn.STUDENT_ID);
+        columnNames.add(AttendeesColumn.NAME);
+        columnNames.add(AttendeesColumn.SURNAME);
+        columnNames.add(AttendeesColumn.MARK);
+        ctx.setVariable("attendances", attendances);
+        ctx.setVariable("columnNames", columnNames);
+        ctx.setVariable("report", report);
+        templateEngine.process(REPORT_PAGE, ctx, response.getWriter());
     }
 }
