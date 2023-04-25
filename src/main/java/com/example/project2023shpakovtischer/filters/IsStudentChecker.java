@@ -1,6 +1,7 @@
 package com.example.project2023shpakovtischer.filters;
 
-import com.example.project2023shpakovtischer.utils.ConnectionHandler;
+import com.example.project2023shpakovtischer.beans.UserBean;
+import com.example.project2023shpakovtischer.enums.UserRole;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,30 +11,26 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 
 @WebFilter(filterName = "IsStudentChecker")
 public class IsStudentChecker extends HttpFilter {
-    private Connection connection = null;
 
     public void init(FilterConfig config) throws ServletException {
-        connection = ConnectionHandler.getConnection(config.getServletContext());
+        super.init(config);
     }
 
     public void destroy() {
-        try {
-            ConnectionHandler.closeConnection(connection);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super.destroy();
     }
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        if (true) {
+        UserBean user = (UserBean) request.getSession().getAttribute("user");
+
+        if (user.getRole().equals(UserRole.STUDENT)) {
             chain.doFilter(request, response);
         } else {
-            response.sendError(403);
+            response.sendError(403, "Only student can access this page!");
         }
     }
 }

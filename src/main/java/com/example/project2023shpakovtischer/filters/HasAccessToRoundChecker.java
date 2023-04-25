@@ -1,12 +1,11 @@
 package com.example.project2023shpakovtischer.filters;
 
-
-import com.example.project2023shpakovtischer.dao.AttendanceDAO;
-import com.example.project2023shpakovtischer.dao.RoundDAO;
-import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.beans.AttendanceBean;
 import com.example.project2023shpakovtischer.beans.RoundBean;
 import com.example.project2023shpakovtischer.beans.UserBean;
+import com.example.project2023shpakovtischer.dao.AttendanceDAO;
+import com.example.project2023shpakovtischer.dao.RoundDAO;
+import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 
 import javax.servlet.FilterChain;
@@ -40,7 +39,8 @@ public class HasAccessToRoundChecker extends HttpFilter {
         try {
             RoundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e){
-            response.sendError(400);
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
         int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
         UserRole role = ((UserBean) request.getSession().getAttribute("user")).getRole();
@@ -50,7 +50,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
             if (round.getProfessorId() == UserId){
                 chain.doFilter(request, response);
             } else {
-                response.sendError(403);
+                response.sendError(403, "You are not authorized to access this round");
             }
         } else if (role.equals(UserRole.STUDENT)) {
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
@@ -59,7 +59,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
             if (attendance != null){
                 chain.doFilter(request, response);
             } else {
-                response.sendError(403);
+                response.sendError(403, "You are not authorized to access this round");
             }
         }
     }

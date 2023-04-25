@@ -1,12 +1,11 @@
 package com.example.project2023shpakovtischer.filters;
 
-
-import com.example.project2023shpakovtischer.dao.CourseDAO;
-import com.example.project2023shpakovtischer.dao.RoundDAO;
-import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.beans.CourseBean;
 import com.example.project2023shpakovtischer.beans.RoundBean;
 import com.example.project2023shpakovtischer.beans.UserBean;
+import com.example.project2023shpakovtischer.dao.CourseDAO;
+import com.example.project2023shpakovtischer.dao.RoundDAO;
+import com.example.project2023shpakovtischer.enums.UserRole;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 
 import javax.servlet.FilterChain;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-@WebFilter(filterName = "HasAccessToRoundChecker")
+@WebFilter(filterName = "HasAccessToCourseChecker")
 public class HasAccessToCourseChecker extends HttpFilter {
     private Connection connection = null;
     public void init(FilterConfig config) throws ServletException {
@@ -41,7 +40,8 @@ public class HasAccessToCourseChecker extends HttpFilter {
         try {
             CourseId = Integer.parseInt(request.getParameter("courseId"));
         } catch (NumberFormatException e){
-            response.sendError(400);
+            System.out.println(e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
         }
         //LoggedInChecker must be applied before this filter
         int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
@@ -52,7 +52,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
             if (course.getProfessorId() == UserId){
                 chain.doFilter(request, response);
             } else {
-                response.sendError(403);
+                response.sendError(403, "You are not authorized to access this course");
             }
         } else if (role.equals(UserRole.STUDENT)) {
             RoundDAO roundDAO = new RoundDAO(connection);
@@ -61,7 +61,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
             if (rounds.size() > 0) {
                 chain.doFilter(request, response);
             } else {
-                response.sendError(403);
+                response.sendError(403, "You are not authorized to access this course");
             }
         }
     }
