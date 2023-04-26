@@ -32,6 +32,7 @@ public class CourseDAO {
             if (resultSet.next()) {
                 course.setId(resultSet.getInt("courseId"));
                 course.setName(resultSet.getString("name"));
+                course.setProfessorId(resultSet.getInt("profId"));
             }
             else{
                 return null;

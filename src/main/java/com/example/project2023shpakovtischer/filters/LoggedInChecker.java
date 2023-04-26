@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.example.project2023shpakovtischer.utils.Paths.CHECK_LOGIN_SERVLET;
 import static com.example.project2023shpakovtischer.utils.Paths.LOGIN_PAGE;
 
 @WebFilter(filterName = "LoggedInChecker")
@@ -34,6 +35,12 @@ public class LoggedInChecker extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
+
+        boolean isLogin = request.getRequestURI().equals(getServletContext().getContextPath() + LOGIN_PAGE)
+                || request.getRequestURI().equals(getServletContext().getContextPath() + CHECK_LOGIN_SERVLET);
+
+        if(isLogin)
+            chain.doFilter(request, response);
 
         UserBean user = (UserBean) request.getSession().getAttribute("user");
         if (user != null) {

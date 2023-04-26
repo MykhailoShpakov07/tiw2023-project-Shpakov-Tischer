@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `exams_journal` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `exams_journal`;
 -- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: exams_journal
@@ -9,7 +7,7 @@ USE `exams_journal`;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -44,7 +42,7 @@ CREATE TABLE `attends` (
 
 LOCK TABLES `attends` WRITE;
 /*!40000 ALTER TABLE `attends` DISABLE KEYS */;
-INSERT INTO `attends` VALUES (2,4,18,3),(3,5,23,4);
+INSERT INTO `attends` (`studentId`, `roundId`, `mark`, `evaluationStatus`) VALUES (2,7,NULL,0),(2,8,NULL,0),(2,10,NULL,0),(3,8,NULL,0),(3,10,NULL,0),(3,11,NULL,0),(6,8,NULL,0),(6,10,NULL,0),(6,11,NULL,0);
 /*!40000 ALTER TABLE `attends` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -69,13 +67,6 @@ DELIMITER ;;
     if ( new.evaluationStatus = 0 and new.mark is not NULL ) or (new.mark is NULL and new.evaluationStatus != 0) then
 		SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'Insertion canceled. Evaluation status doesn`t match the given mark';
-    end if;
-    
-    if ( new.evaluationStatus = 4 ) then
-		if ( select `reportIsCreated` from `round` where `round`.`roundId` = new.roundId ) = false then
-			SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Insertion canceled. The report for the relative round wasn`t yet created';
-		end if;
     end if;
     
 
@@ -109,12 +100,6 @@ DELIMITER ;;
             SET MESSAGE_TEXT = 'Update canceled. Evaluation status doesn`t match the given mark';
     end if;
     
-    if ( new.evaluationStatus = 4 ) then
-		if ( select `reportIsCreated` from `round` where `round`.`roundId` = new.roundId ) = false then
-			SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Update canceled. The report for the relative round wasn`t yet created';
-		end if;
-    end if;
     
     if new.mark != old.mark then
 		if( new.evaluationStatus = 2 and old.evaluationStatus = 2 ) then
@@ -157,7 +142,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (1,'course1',1),(7,'name2',1);
+INSERT INTO `course` (`courseId`, `name`, `profId`) VALUES (1,'course1',1),(7,'name2',1);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -235,7 +220,7 @@ CREATE TABLE `round` (
   UNIQUE KEY `reportCode_UNIQUE` (`reportCode`),
   KEY `courseId_idx` (`courseId`),
   CONSTRAINT `courseId` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +229,7 @@ CREATE TABLE `round` (
 
 LOCK TABLES `round` WRITE;
 /*!40000 ALTER TABLE `round` DISABLE KEYS */;
-INSERT INTO `round` VALUES (1,1,'1000-01-01',2,'2023-04-14 01:53:46.0',1),(3,1,'1000-01-02',3,'2023-04-14 01:54:11.0',1),(4,1,'2023-04-15',4,'2023-04-15 17:19:17.0',1),(5,7,'2023-04-15',5,'2023-04-15 21:20:53.0',1);
+INSERT INTO `round` (`roundId`, `courseId`, `date`, `reportCode`, `reportDateTime`, `reportIsCreated`) VALUES (7,1,'2023-04-23',NULL,NULL,0),(8,1,'2023-04-24',NULL,NULL,0),(9,1,'2023-04-25',NULL,NULL,0),(10,7,'2023-04-26',NULL,NULL,0),(11,7,'2023-04-26',NULL,NULL,0);
 /*!40000 ALTER TABLE `round` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -351,7 +336,7 @@ CREATE TABLE `user` (
   `studyCourse` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +345,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'pass1','name1','sur1','1@email.com',_binary '',NULL),(2,'pass2','name2','sur2','2@email.com',_binary '\0','2'),(3,'pass3','name3','sur3','3@email.com',_binary '\0','3'),(5,'pass4','name4','sur4','4@email.com',_binary '',NULL);
+INSERT INTO `user` (`userId`, `password`, `name`, `surname`, `email`, `role`, `studyCourse`) VALUES (1,'pass1','name1','sur1','1@email.com',_binary '',NULL),(2,'pass2','name2','sur2','2@email.com',_binary '\0','2'),(3,'pass3','name3','sur3','3@email.com',_binary '\0','3'),(5,'pass5','name5','sur5','5@email.com',_binary '',NULL),(6,'pass6','name6','sur6','6@email.com',_binary '\0','informatica');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -411,10 +396,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Dumping events for database 'exams_journal'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -425,4 +406,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-15 22:21:18
+-- Dump completed on 2023-04-26 15:38:23
