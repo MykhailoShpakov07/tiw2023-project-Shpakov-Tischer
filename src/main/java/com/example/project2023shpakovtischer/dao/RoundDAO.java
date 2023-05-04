@@ -12,9 +12,9 @@ import java.util.ArrayList;
 public class RoundDAO {
     private Connection connection;
 
-    private static final String GET_ROUND_BY_ID_FOR_PROF = "SELECT roundId, date, profId FROM round JOIN course WHERE roundId = ?";
+    private static final String GET_ROUND_BY_ID_FOR_PROF = "SELECT roundId, date, profId FROM round JOIN course USING (courseId) WHERE roundId = ?";
     private static final String GET_ROUNDS_BY_COURSE_ID = "SELECT roundId, date FROM round WHERE courseId = ?";
-    private static final String GET_ROUNDS_BY_COURSE_ID_AND_STUDENT_ID = "SELECT DISTINCT round.roundId, round.date FROM attends join round WHERE courseId = ? AND studentId = ? ";
+    private static final String GET_ROUNDS_BY_COURSE_ID_AND_STUDENT_ID = "SELECT DISTINCT round.roundId, round.date FROM attends join round USING (roundId) WHERE courseId = ? AND studentId = ? ";
 
     public RoundDAO(Connection connection) {
         this.connection = connection;

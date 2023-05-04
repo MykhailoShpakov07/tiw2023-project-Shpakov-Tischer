@@ -4,7 +4,7 @@
     </head>
     <body>
         <h1 th:text="${message}"></h1>
-        <h2>Courses Template</h2>
+        <h2 th:text="'Scegli un corso ' + ${session.user.role.getValue() == 1 ? 'per il quale gestire i voti':'a cui sei iscritto per visualizzare il voto'} ">Courses Template</h2>
         <ul>
             <li th:each="course : ${courses}">
                 <a th:href="@{${getCourseRoundsServletPath}(courseId=${course.id})}" th:text="${course.name}" >
@@ -12,5 +12,6 @@
                 </a>
             </li>
         </ul>
+        <a th:href="@{${logoutServletPath}}" th:text="ESCI">Logout</a>
     </body>
 </html>

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Attendees Page</title>
 </head>
 <body>
-    <h1>Attendees Page Template</h1>
+    <h1 th:text="'Iscritti all\'appello'">Attendees Page Template</h1>
 
     <h2 th:text="'Nome del corso: ' + ${course.name}">Course Name</h2>
-    <h3 th:text="'Data dell`appello: ' + ${round.date}">Round Date</h3>
-    <table>
+    <h3 th:text="'Data dell\'appello: ' + ${round.date}">Round Date</h3>
+    <table border="1">
         <thead>
             <tr>
                 <th th:each="columnName: ${columnNames}">
                     <a th:href="@{${getRoundServletPath}(roundId=${round.id},
                             orderLabel=${columnName.getValue()},
-                            reverse=${(orderLabel.equals(columnName.getName())) and reverse})}"
-                       th:text="${columnName.getName()}">
+                            reverse=${(orderLabel== columnName.getValue()) and reverse})}"
+                       th:text="${columnName}">
                         Link
                     </a>
                 </th>
@@ -59,7 +59,7 @@
                         evaluation status
                     </p>
                 </td>
-                <td>
+                <td th:if="${reportStatus==0}">
                     <a th:if="${attendance.evaluationStatus.getValue() < 2}"
                        th:href="@{${getAssignMarkPageServletPath}(studentId=${attendance.studentId}, roundId=${round.id})}">
                         Edit

@@ -42,7 +42,7 @@ CREATE TABLE `attends` (
 
 LOCK TABLES `attends` WRITE;
 /*!40000 ALTER TABLE `attends` DISABLE KEYS */;
-INSERT INTO `attends` (`studentId`, `roundId`, `mark`, `evaluationStatus`) VALUES (2,7,NULL,0),(2,8,NULL,0),(2,10,NULL,0),(3,8,NULL,0),(3,10,NULL,0),(3,11,NULL,0),(6,8,NULL,0),(6,10,NULL,0),(6,11,NULL,0);
+INSERT INTO `attends` (`studentId`, `roundId`, `mark`, `evaluationStatus`) VALUES (2,12,NULL,0),(2,13,NULL,0),(2,15,NULL,0),(2,16,NULL,0),(3,12,NULL,0),(3,14,NULL,0),(3,15,NULL,0),(3,16,NULL,0),(6,12,NULL,0),(6,14,NULL,0),(6,16,NULL,0);
 /*!40000 ALTER TABLE `attends` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -142,7 +142,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` (`courseId`, `name`, `profId`) VALUES (1,'course1',1),(7,'name2',1);
+INSERT INTO `course` (`courseId`, `name`, `profId`) VALUES (1,'Analisi 1',1),(7,'TIW',1);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -220,7 +220,7 @@ CREATE TABLE `round` (
   UNIQUE KEY `reportCode_UNIQUE` (`reportCode`),
   KEY `courseId_idx` (`courseId`),
   CONSTRAINT `courseId` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,7 +229,7 @@ CREATE TABLE `round` (
 
 LOCK TABLES `round` WRITE;
 /*!40000 ALTER TABLE `round` DISABLE KEYS */;
-INSERT INTO `round` (`roundId`, `courseId`, `date`, `reportCode`, `reportDateTime`, `reportIsCreated`) VALUES (7,1,'2023-04-23',NULL,NULL,0),(8,1,'2023-04-24',NULL,NULL,0),(9,1,'2023-04-25',NULL,NULL,0),(10,7,'2023-04-26',NULL,NULL,0),(11,7,'2023-04-26',NULL,NULL,0);
+INSERT INTO `round` (`roundId`, `courseId`, `date`, `reportCode`, `reportDateTime`, `reportIsCreated`) VALUES (12,1,'2023-04-09',NULL,NULL,0),(13,1,'2023-04-10',NULL,NULL,0),(14,1,'2023-04-11',NULL,NULL,0),(15,7,'2023-04-10',NULL,NULL,0),(16,7,'2023-04-12',NULL,NULL,0),(17,7,'2023-04-26',NULL,NULL,0);
 /*!40000 ALTER TABLE `round` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -320,6 +320,19 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Temporary view structure for view `samecoursenextdate`
+--
+
+DROP TABLE IF EXISTS `samecoursenextdate`;
+/*!50001 DROP VIEW IF EXISTS `samecoursenextdate`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `samecoursenextdate` AS SELECT 
+ 1 AS `studentId`,
+ 1 AS `roundId`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `user`
 --
 
@@ -345,7 +358,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`userId`, `password`, `name`, `surname`, `email`, `role`, `studyCourse`) VALUES (1,'pass1','name1','sur1','1@email.com',_binary '',NULL),(2,'pass2','name2','sur2','2@email.com',_binary '\0','2'),(3,'pass3','name3','sur3','3@email.com',_binary '\0','3'),(5,'pass5','name5','sur5','5@email.com',_binary '',NULL),(6,'pass6','name6','sur6','6@email.com',_binary '\0','informatica');
+INSERT INTO `user` (`userId`, `password`, `name`, `surname`, `email`, `role`, `studyCourse`) VALUES (1,'pass1','Piero','Fraternali','1@email.com',_binary '',NULL),(2,'pass2','Mike','Shpakov','2@email.com',_binary '\0','gestionale'),(3,'pass3','Alessandro','Tischer','3@email.com',_binary '\0','fisica'),(5,'pass5','Davide','Martinenghi','5@email.com',_binary '',NULL),(6,'pass6','Giacomo','Stefanizzi','6@email.com',_binary '\0','informatica');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -396,6 +409,24 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `samecoursenextdate`
+--
+
+/*!50001 DROP VIEW IF EXISTS `samecoursenextdate`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `samecoursenextdate` AS select `attends`.`studentId` AS `studentId`,`subquery`.`roundId` AS `roundId` from ((select `round`.`roundId` AS `roundId` from `round` where ((`round`.`courseId` = (select `round`.`courseId` from `round` where (`round`.`roundId` = 10))) and (`round`.`date` > (select `round`.`date` from `round` where (`round`.`roundId` = 10))))) `subquery` join `attends` on((`subquery`.`roundId` = `attends`.`roundId`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -406,4 +437,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-26 15:38:23
+-- Dump completed on 2023-04-26 23:03:10

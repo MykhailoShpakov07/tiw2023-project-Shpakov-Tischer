@@ -57,7 +57,7 @@ public class RefuseMark extends HttpServlet {
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
-            AttendanceBean attendance = attendanceDAO.getAttendance(studentId, roundId);
+            AttendanceBean attendance = attendanceDAO.getAttendance(roundId, studentId);
             if (attendance.getEvaluationStatus().getValue() == 3) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The mark has already been refused");
             } else if (attendance.getEvaluationStatus().getValue() == 4) {
@@ -65,7 +65,7 @@ public class RefuseMark extends HttpServlet {
             } else if (attendance.getEvaluationStatus().getValue() < 2) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "It is not possible to refuse the mark at this time");
             }
-            attendanceDAO.refuseMark(studentId, roundId);
+            attendanceDAO.refuseMark(roundId, studentId);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "It was not possible to refuse the mark");

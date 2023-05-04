@@ -74,6 +74,7 @@ public class CreateReport extends HttpServlet {
             if(reportDAO.canBeReported(roundId) && !attendances.isEmpty()){
                 try {
                     reportDAO.createReport(roundId);
+                    attendances = attendanceDAO.getOrderedAttendances(roundId, AttendeesColumn.STUDENT_ID.getName(), false);
                     showReportPage(response, ctx, attendances, reportDAO.getReportByRoundId(roundId));
 
                 } catch (SQLException | UnavailableException e) {

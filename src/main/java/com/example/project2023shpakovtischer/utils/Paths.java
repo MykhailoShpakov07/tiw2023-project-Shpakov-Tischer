@@ -11,9 +11,12 @@ public class Paths {
     public static final String GET_COURSES_SERVLET = "/get-courses";
     public static final String GET_COURSE_ROUNDS_SERVLET = "/get-course-rounds";
     public static final String GET_ROUND_SERVLET = "/get-round";
+    public static final String LOGOUT_SERVLET = "/logout";
+
+    public static final String DEFAULT_SERVLET = "/";
 
 
-    public static final String LOGIN_PAGE = "loginPage.html";
+    public static final String LOGIN_PAGE = "/loginPage.html";
     public static final String HOME_PAGE = "/WEB-INF/homePage.html";
     public static final String COURSE_ROUNDS_PAGE = "/WEB-INF/courseRoundsPage.html";
     public static final String ATTENDEES_PAGE = "/WEB-INF/professorPages/attendeesPage.html";

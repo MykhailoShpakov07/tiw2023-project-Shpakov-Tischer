@@ -35,26 +35,26 @@ public class HasAccessToRoundChecker extends HttpFilter {
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        int RoundId = 0;
+        int roundId = 0;
         try {
-            RoundId = Integer.parseInt(request.getParameter("roundId"));
+            roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
         }
-        int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
+        int userId = ((UserBean) request.getSession().getAttribute("user")).getId();
         UserRole role = ((UserBean) request.getSession().getAttribute("user")).getRole();
         if(role.equals(UserRole.PROFESSOR)){
             RoundDAO roundDAO = new RoundDAO(connection);
-            RoundBean round = roundDAO.getRoundById(RoundId);
-            if (round.getProfessorId() == UserId){
+            RoundBean round = roundDAO.getRoundById(roundId);
+            if (round.getProfessorId() == userId){
                 chain.doFilter(request, response);
             } else {
                 response.sendError(403, "You are not authorized to access this round");
             }
         } else if (role.equals(UserRole.STUDENT)) {
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
-            AttendanceBean attendance = attendanceDAO.getAttendance(RoundId, UserId);
+            AttendanceBean attendance = attendanceDAO.getAttendance(roundId, userId);
 
             if (attendance != null){
                 chain.doFilter(request, response);

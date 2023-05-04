@@ -29,6 +29,20 @@ public enum AttendeesColumn {
         return this.name;
     }
 
+    @Override
+    public String toString() {
+        switch (this.value){
+            case 0: return "MATRICOLA";
+            case 1: return "NOME";
+            case 2: return "COGNOME";
+            case 3: return "EMAIL";
+            case 4: return "CORSO DI LAUREA";
+            case 5: return "VOTO";
+            case 6: return "STATO DI VALUTAZIONE";
+            default: throw new IllegalArgumentException("The attendeesColumn doesn`t exist for this value");
+        }
+    }
+
     public int getValue(){
         return this.value;
     }

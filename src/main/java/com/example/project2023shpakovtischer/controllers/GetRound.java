@@ -44,6 +44,7 @@ public class GetRound extends HttpServlet {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
+        templateResolver.setCharacterEncoding("UTF-8");
 
         try {
             connection = ConnectionHandler.getConnection(servletContext);
@@ -145,7 +146,7 @@ public class GetRound extends HttpServlet {
 
             path = path + ATTENDEES_PAGE;
             ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
-            ctx.setVariable("orderLabel", orderLabel.getName());
+            ctx.setVariable("orderLabel", orderLabel.getValue());
             ctx.setVariable("reverse", !reverse);
             ctx.setVariable("attendances", attendances);
             ctx.setVariable("round", round);

@@ -5,13 +5,13 @@
     <title>Report</title>
 </head>
 <body>
-    <h1>Report Template</h1>
-    <h2 th:text="'Nome del corso: ' + ${report.courseName}">Course Name</h2>
-    <h3 th:text="'Data dell`appello: ' + ${report.roundDate}">Round Date</h3>
+    <h1 th:text="'Il report dell\'appello'"> Report header </h1>
+    <h3 th:text="'Nome del corso: ' + ${report.courseName}">Course Name</h3>
+    <h3 th:text="'Data dell\'appello: ' + ${report.roundDate}">Round Date</h3>
     <h3 th:text="'Codice del Verbale: ' + ${report.reportCode}">Report Code</h3>
     <h3 th:text="'Data ed Ora del Verbale: ' + ${report.reportDateTime}">Report Date</h3>
 
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th th:each="columnName: ${columnNames}">

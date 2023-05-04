@@ -72,12 +72,13 @@ public class GetCourses extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving courses");
         }
 
-        message = "Welcome " + user.getName() + " " + user.getSurname() + "!";
+        message = "Benvenuto " + user.getName() + " " + user.getSurname() + "!";
         path = path + HOME_PAGE;
 
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("message", message);
         ctx.setVariable("getCourseRoundsServletPath",GET_COURSE_ROUNDS_SERVLET);
+        ctx.setVariable("logoutServletPath", LOGOUT_SERVLET);
         ctx.setVariable("courses", courses);
         templateEngine.process(path, ctx, response.getWriter());
     }

@@ -22,10 +22,15 @@ public class AttendanceDAO {
     private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = ? WHERE roundId = ? AND studentId = ?";
     private static final String PUBLISH_MARKS = "UPDATE attends SET evaluationStatus = 2 WHERE roundId = ? and evaluationStatus = 1";
     private static final String REFUSE_MARK = "UPDATE attends SET evaluationStatus = 3 WHERE studentId = ? AND roundId = ?";
-    private static final String CREATE_VIEW_ROUNDS_ON_NEXT_DATES = "CREATE OR REPLACE VIEW SameCourseNextDate AS " +
-            "SELECT roundId FROM round WHERE courseId = (SELECT courseId FROM round WHERE roundId = ?) AND date > (SELECT date FROM round WHERE roundId = ?) ";
-    private static final String DELETE_FURTHER_ATTENDANCES = "DELETE FROM attends WHERE (studentId, roundId ) in (SELECT studentId, roundId FROM attends join SameCourseNextDate " +
-            "WHERE roundId = ? and mark between 18 and 31)";
+    private static final String DELETE_FURTHER_ATTENDANCES = "DELETE a1 FROM attends a1" +
+                                                    "                   JOIN round r1 ON a1.roundId = r1.roundId" +
+                                                    "                   JOIN attends a2 ON a1.studentId = a2.studentId" +
+                                                    "                   JOIN round r2 ON a2.roundId = r2.roundId" +
+                                                    "  WHERE r1.courseId = r2.courseId" +
+                                                    "  AND a1.roundId != a2.roundId" +
+                                                    "  AND r2.date < r1.date" +
+                                                    "  AND a2.mark BETWEEN 18 AND 31" +
+                                                    "  AND a2.evaluationStatus = 4";
     private static final String CAN_BE_PUBLISHED = "SELECT * FROM attends WHERE roundId=? and evaluationStatus = 1";
 
 
@@ -164,14 +169,9 @@ public class AttendanceDAO {
     }
 
 
-    void deleteAttendancesForNextRounds(int roundId) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(CREATE_VIEW_ROUNDS_ON_NEXT_DATES);
-        preparedStatement.setInt(1, roundId);
-        preparedStatement.setInt(2, roundId);
-        preparedStatement.executeUpdate();
+    void deleteAttendancesForNextRounds() throws SQLException {
 
-        preparedStatement = connection.prepareStatement(DELETE_FURTHER_ATTENDANCES);
-        preparedStatement.setInt(1, roundId);
+        PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FURTHER_ATTENDANCES);
         preparedStatement.executeUpdate();
     }
 

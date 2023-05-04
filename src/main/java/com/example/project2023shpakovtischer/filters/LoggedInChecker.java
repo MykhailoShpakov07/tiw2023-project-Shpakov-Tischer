@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.project2023shpakovtischer.utils.Paths.CHECK_LOGIN_SERVLET;
-import static com.example.project2023shpakovtischer.utils.Paths.LOGIN_PAGE;
+import static com.example.project2023shpakovtischer.utils.Paths.*;
 
 @WebFilter(filterName = "LoggedInChecker")
 public class LoggedInChecker extends HttpFilter {
@@ -36,19 +35,30 @@ public class LoggedInChecker extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
 
-        boolean isLogin = request.getRequestURI().equals(getServletContext().getContextPath() + LOGIN_PAGE)
-                || request.getRequestURI().equals(getServletContext().getContextPath() + CHECK_LOGIN_SERVLET);
+        boolean isLogin = request.getRequestURI().equals(request.getContextPath() + LOGIN_PAGE)
+                || request.getRequestURI().equals(request.getContextPath() + CHECK_LOGIN_SERVLET)
+                || request.getRequestURI().equals(request.getContextPath() + DEFAULT_SERVLET);
 
-        if(isLogin)
-            chain.doFilter(request, response);
-
-        UserBean user = (UserBean) request.getSession().getAttribute("user");
-        if (user != null) {
-            chain.doFilter(request, response);
+        if(isLogin) {
+            if(request.getSession().getAttribute("user") == null) {
+                ctx.setVariable("message", "");
+                ctx.removeVariable("message");
+                chain.doFilter(request, response);
+            }
+            else {
+                response.sendRedirect(GET_COURSES_SERVLET);
+            }
         }
         else {
-            ctx.setVariable("message", "You must be logged in to access this page !");
-            templateEngine.process(LOGIN_PAGE, ctx, response.getWriter());
+            UserBean user = (UserBean) request.getSession().getAttribute("user");
+            if (user != null) {
+                ctx.setVariable("message", "");
+                ctx.removeVariable("message");
+                chain.doFilter(request, response);
+            } else {
+                ctx.setVariable("message", "You must be logged in to access this page !");
+                templateEngine.process(LOGIN_PAGE, ctx, response.getWriter());
+            }
         }
     }
 

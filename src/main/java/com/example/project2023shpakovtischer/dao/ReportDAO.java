@@ -13,9 +13,9 @@ public class ReportDAO {
 
 
     private static final String REPORT_MARKS = "UPDATE attends SET evaluationStatus = 4 WHERE roundId = ? and ( evaluationStatus = 2 or evaluationStatus = 3 )";
-    private static final String UPDATE_MARK_ON_REFUSED_ATTENDANCES = "UPDATE attends SET mark = 16 WHERE roundId = ?";
+    private static final String UPDATE_MARK_ON_REFUSED_ATTENDANCES = "UPDATE attends SET mark = 16 WHERE roundId = ? and evaluationStatus = 3";
     private static final String CREATE_REPORT = "UPDATE round SET reportIsCreated = 1, reportDateTime = NOW() WHERE roundId = ?";
-    private static final String GET_REPORT_BY_ROUND_ID = "SELECT reportCode, reportDateTime, name, date FROM round join course WHERE roundId = ? AND reportIsCreated = 1";
+    private static final String GET_REPORT_BY_ROUND_ID = "SELECT reportCode, reportDateTime, name, date FROM round join course USING (courseId) WHERE roundId = ? AND reportIsCreated = 1";
     private static final String CAN_BE_REPORTED = "SELECT * FROM attends WHERE evaluationStatus != 2 and evaluationStatus != 3 and roundId = ?";
 
     public ReportDAO(Connection connection) {
@@ -68,7 +68,7 @@ public class ReportDAO {
             preparedStatement.executeUpdate();
 
             AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
-            attendanceDAO.deleteAttendancesForNextRounds(roundId);
+            attendanceDAO.deleteAttendancesForNextRounds();
         }
         catch (SQLException e) {
             closeStatement(preparedStatement);

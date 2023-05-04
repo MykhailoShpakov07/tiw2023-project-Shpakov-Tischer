@@ -16,4 +16,8 @@ public enum UserRole {
             default: throw new IllegalArgumentException("The userRole doesn`t exist for this value");
         }
     }
+
+    public int getValue(){
+        return this.value;
+    }
 }

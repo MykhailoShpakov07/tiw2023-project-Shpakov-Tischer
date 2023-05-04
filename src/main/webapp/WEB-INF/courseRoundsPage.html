@@ -5,16 +5,17 @@
     <title>Course Rounds</title>
 </head>
 <body>
-    <h1>Course Rounds Template</h1>
-    <p>Course Rounds for course: <span th:text="${course.name}"></span></p>
-    <p>Course id is: <span th:text="${course.id}"></span></p>
+    <h2 th:text="'Scegli un appello ' + ${session.user.role.getValue() == 1 ? 'per il quale gestire i voti':'a cui sei iscritto per visualizzare il voto'} ">Course Rounds Template</h2>
+    <p th:text="'Nome del corso:' + ${course.name}">Course Rounds for course:</p>
 
-    <ul>
-        <li th:each="round : ${rounds}">
-            <a th:href="@{${getRoundServletPath}(roundId=${round.id})}" th:text="${round.date}" >
-                Link
-            </a>
-        </li>
-    </ul>
+    <table border="1">
+        <tr th:each="round : ${rounds}">
+            <td>
+                <a th:href="@{${getRoundServletPath}(roundId=${round.id})}" th:text="${round.date}" >
+                    Link
+                </a>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
