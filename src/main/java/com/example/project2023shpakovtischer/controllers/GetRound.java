@@ -144,7 +144,6 @@ public class GetRound extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
             }
 
-            path = path + ATTENDEES_PAGE;
             ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
             ctx.setVariable("orderLabel", orderLabel.getValue());
             ctx.setVariable("reverse", !reverse);
@@ -157,7 +156,7 @@ public class GetRound extends HttpServlet {
             ctx.setVariable("getAssignMarkPageServletPath", GET_ASSIGN_MARK_PAGE_SERVLET);
             ctx.setVariable("publishMarksServletPath", PUBLISH_MARKS_SERVLET);
             ctx.setVariable("createReportServletPath", CREATE_REPORT_SERVLET);
-            templateEngine.process(path, ctx, response.getWriter());
+            templateEngine.process(ATTENDEES_PAGE, ctx, response.getWriter());
 
         }
         else if(user.getRole().equals(UserRole.STUDENT)){
@@ -183,14 +182,12 @@ public class GetRound extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
             }
 
-            path = path + RESULT_PAGE;
-
             ctx.setVariable("attendance", attendance);
             ctx.setVariable("round", round);
             ctx.setVariable("course", course);
             ctx.setVariable("professor", prof);
             ctx.setVariable("refuseMarkServletPath", REFUSE_MARK_SERVLET);
-            templateEngine.process(path, ctx, response.getWriter());
+            templateEngine.process(RESULT_PAGE, ctx, response.getWriter());
         }
 
     }

@@ -76,7 +76,6 @@ public class GetCourseRounds extends HttpServlet {
             } else if (user.getRole().equals(UserRole.STUDENT)) {
                 rounds = roundDAO.getRoundsByCourseIdAndStudentId(courseId, user.getId());
             }
-            path = path + COURSE_ROUNDS_PAGE;
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving course rounds");
@@ -85,7 +84,7 @@ public class GetCourseRounds extends HttpServlet {
         ctx.setVariable("course", course);
         ctx.setVariable("getRoundServletPath", GET_ROUND_SERVLET);
         ctx.setVariable("rounds", rounds);
-        templateEngine.process(path, ctx, response.getWriter());
+        templateEngine.process(COURSE_ROUNDS_PAGE, ctx, response.getWriter());
     }
 
     @Override
