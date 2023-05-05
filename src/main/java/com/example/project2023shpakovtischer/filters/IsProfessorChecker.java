@@ -30,7 +30,7 @@ public class IsProfessorChecker extends HttpFilter {
         if (user.getRole().equals(UserRole.PROFESSOR)) {
             chain.doFilter(request, response);
         } else {
-            response.sendError(403, "Only professor can access this page!");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Only professor can access this page!");
         }
     }
 }

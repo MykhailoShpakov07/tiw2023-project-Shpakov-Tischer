@@ -41,7 +41,6 @@ public class LoggedInChecker extends HttpFilter {
 
         if(isLogin) {
             if(request.getSession().getAttribute("user") == null) {
-                ctx.setVariable("message", "");
                 ctx.removeVariable("message");
                 chain.doFilter(request, response);
             }
@@ -52,7 +51,6 @@ public class LoggedInChecker extends HttpFilter {
         else {
             UserBean user = (UserBean) request.getSession().getAttribute("user");
             if (user != null) {
-                ctx.setVariable("message", "");
                 ctx.removeVariable("message");
                 chain.doFilter(request, response);
             } else {

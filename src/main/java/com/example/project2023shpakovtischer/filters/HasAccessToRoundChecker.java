@@ -40,27 +40,41 @@ public class HasAccessToRoundChecker extends HttpFilter {
             roundId = Integer.parseInt(request.getParameter("roundId"));
         } catch (NumberFormatException e){
             System.out.println(e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "roundId parameter is not an integer!");
         }
         int userId = ((UserBean) request.getSession().getAttribute("user")).getId();
         UserRole role = ((UserBean) request.getSession().getAttribute("user")).getRole();
         if(role.equals(UserRole.PROFESSOR)){
             RoundDAO roundDAO = new RoundDAO(connection);
             RoundBean round = roundDAO.getRoundById(roundId);
-            if (round.getProfessorId() == userId){
-                chain.doFilter(request, response);
-            } else {
-                response.sendError(403, "You are not authorized to access this round");
+            if (round == null){
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, " roundId is not valid!");
+            }
+            else {
+                if (round.getProfessorId() == userId) {
+                    chain.doFilter(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Non sei autorizzato ad accedere a questo round!");
+                }
             }
         } else if (role.equals(UserRole.STUDENT)) {
-            AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
-            AttendanceBean attendance = attendanceDAO.getAttendance(roundId, userId);
+            RoundDAO roundDAO = new RoundDAO(connection);
+            RoundBean round = roundDAO.getRoundById(roundId);
 
-            if (attendance != null){
-                chain.doFilter(request, response);
-            } else {
-                response.sendError(403, "You are not authorized to access this round");
+            if (round == null){
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "roundId is not valid!");
             }
+            else {
+                AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
+                AttendanceBean attendance = attendanceDAO.getAttendance(roundId, userId);
+
+                if (attendance != null){
+                    chain.doFilter(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this round!");
+                }
+            }
+
         }
     }
 

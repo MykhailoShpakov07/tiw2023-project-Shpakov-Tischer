@@ -41,7 +41,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
             CourseId = Integer.parseInt(request.getParameter("courseId"));
         } catch (NumberFormatException e){
             System.out.println(e.getMessage());
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "courseId is not an integer!");
         }
         //LoggedInChecker must be applied before this filter
         int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
@@ -49,19 +49,32 @@ public class HasAccessToCourseChecker extends HttpFilter {
         if(role.equals(UserRole.PROFESSOR)){
             CourseDAO courseDAO = new CourseDAO(connection);
             CourseBean course = courseDAO.getCourseById(CourseId);
-            if (course.getProfessorId() == UserId){
-                chain.doFilter(request, response);
-            } else {
-                response.sendError(403, "You are not authorized to access this course");
+            if(course == null){
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
+            }
+            else {
+                if (course.getProfessorId() == UserId) {
+                    chain.doFilter(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this course");
+                }
             }
         } else if (role.equals(UserRole.STUDENT)) {
             RoundDAO roundDAO = new RoundDAO(connection);
             ArrayList<RoundBean> rounds = roundDAO.getRoundsByCourseIdAndStudentId(CourseId, UserId);
-            //check if user has at least one round relative to that course
-            if (rounds.size() > 0) {
-                chain.doFilter(request, response);
-            } else {
-                response.sendError(403, "You are not authorized to access this course");
+            //check if the course exists
+            CourseDAO courseDAO = new CourseDAO(connection);
+            CourseBean course = courseDAO.getCourseById(CourseId);
+            if(course == null){
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
+            }
+            else {
+                //check if user has at least one round relative to that course
+                if (rounds.size() > 0) {
+                    chain.doFilter(request, response);
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this course");
+                }
             }
         }
     }

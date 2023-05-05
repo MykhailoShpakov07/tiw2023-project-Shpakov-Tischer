@@ -30,7 +30,7 @@ public class IsStudentChecker extends HttpFilter {
         if (user.getRole().equals(UserRole.STUDENT)) {
             chain.doFilter(request, response);
         } else {
-            response.sendError(403, "Only student can access this page!");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Only student can access this page!");
         }
     }
 }
