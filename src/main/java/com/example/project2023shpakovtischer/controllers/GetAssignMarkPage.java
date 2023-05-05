@@ -69,10 +69,10 @@ public class GetAssignMarkPage extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No attendance found for given parameters");
         }
 
-        ctx.setVariable("assignMarkServletPath", ASSIGN_MARK_SERVLET);
+        ctx.setVariable("assignMarkServletPath", getServletContext().getContextPath() + ASSIGN_MARK_SERVLET);
         ctx.setVariable("marks", Mark.values());
         ctx.setVariable("attendance", attendance);
-        templateEngine.process(getServletContext().getContextPath() + ASSIGN_MARK_PAGE, ctx, response.getWriter());
+        templateEngine.process(ASSIGN_MARK_PAGE, ctx, response.getWriter());
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

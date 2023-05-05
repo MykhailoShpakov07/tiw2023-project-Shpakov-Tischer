@@ -92,10 +92,9 @@ public class CheckLogin extends HttpServlet{
         }
 
         //render login page with error message
-        path = path + LOGIN_PAGE;
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("message", message);
-        templateEngine.process(path, ctx, response.getWriter());
+        templateEngine.process(LOGIN_PAGE, ctx, response.getWriter());
     }
 
     public void destroy(){

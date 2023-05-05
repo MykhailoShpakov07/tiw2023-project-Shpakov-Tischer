@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import static com.example.project2023shpakovtischer.utils.Paths.*;
 
-@WebServlet(name = "GetCourses", value = GET_COURSES_SERVLET)
+@WebServlet(name = "GetCourses", value  = GET_COURSES_SERVLET)
 public class GetCourses extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -73,14 +73,13 @@ public class GetCourses extends HttpServlet {
         }
 
         message = "Benvenuto " + user.getName() + " " + user.getSurname() + "!";
-        path = path + HOME_PAGE;
 
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("message", message);
         ctx.setVariable("getCourseRoundsServletPath",GET_COURSE_ROUNDS_SERVLET);
         ctx.setVariable("logoutServletPath", LOGOUT_SERVLET);
         ctx.setVariable("courses", courses);
-        templateEngine.process(path, ctx, response.getWriter());
+        templateEngine.process(HOME_PAGE, ctx, response.getWriter());
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

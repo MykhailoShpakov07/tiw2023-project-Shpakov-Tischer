@@ -12,7 +12,6 @@ public class Paths {
     public static final String GET_COURSE_ROUNDS_SERVLET = "/get-course-rounds";
     public static final String GET_ROUND_SERVLET = "/get-round";
     public static final String LOGOUT_SERVLET = "/logout";
-
     public static final String DEFAULT_SERVLET = "/";
 
 

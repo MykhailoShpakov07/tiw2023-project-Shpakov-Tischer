@@ -45,7 +45,7 @@ public class LoggedInChecker extends HttpFilter {
                 chain.doFilter(request, response);
             }
             else {
-                response.sendRedirect(GET_COURSES_SERVLET);
+                response.sendRedirect(getServletContext().getContextPath() + GET_COURSES_SERVLET);
             }
         }
         else {
