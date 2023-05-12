@@ -71,12 +71,12 @@
 
     <button th:if="${canBePublished}">
         <a th:href="@{${publishMarksServletPath}(roundId=${round.id})}">
-            PUBLISH MARKS
+            PUBBLICA I VOTI
         </a>
     </button>
 
     <button th:if="${reportStatus!=0}">
-        <a th:href="@{${createReportServletPath}(roundId=${round.id})}" th:text="${reportStatus == 1 ? 'CREATE REPORT': (reportStatus == 2 ? 'VIEW REPORT':'error report status')}">
+        <a th:href="@{${createReportServletPath}(roundId=${round.id})}" th:text="${reportStatus == 1 ? 'VERBALIZZA I VOTI': (reportStatus == 2 ? 'VISUALIZZA IL VERBALE':'ERRORE')}">
             DEFAULT CREATE REPORT TEXT
         </a>
     </button>
