@@ -19,9 +19,9 @@ public class AttendanceDAO {
             "FROM attends join user on studentId = userId WHERE roundId = ? ORDER BY ";
     private static final String GET_ATTENDANCE_BY_ROUND_ID_AND_STUDENT_ID = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
             "FROM attends join user on studentId = userId WHERE roundId = ? AND studentId = ?";
-    private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = ? WHERE roundId = ? AND studentId = ?";
-    private static final String PUBLISH_MARKS = "UPDATE attends SET evaluationStatus = 2 WHERE roundId = ? and evaluationStatus = 1";
-    private static final String REFUSE_MARK = "UPDATE attends SET evaluationStatus = 3 WHERE studentId = ? AND roundId = ?";
+    private static final String ASSIGN_MARK = "UPDATE attends SET mark = ?, evaluationStatus = ? WHERE roundId = ? AND studentId = ? AND evaluationStatus < 2";
+    private static final String PUBLISH_MARKS = "UPDATE attends SET evaluationStatus = 2 WHERE roundId = ? AND evaluationStatus = 1";
+    private static final String REFUSE_MARK = "UPDATE attends SET evaluationStatus = 3 WHERE studentId = ? AND roundId = ? AND evaluationStatus = 2";
     private static final String DELETE_FURTHER_ATTENDANCES = "DELETE a1 FROM attends a1" +
                                                     "                   JOIN round r1 ON a1.roundId = r1.roundId" +
                                                     "                   JOIN attends a2 ON a1.studentId = a2.studentId" +

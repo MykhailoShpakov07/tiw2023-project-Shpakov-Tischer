@@ -31,7 +31,7 @@ public enum Mark {
             case 29: return VENTINOVE;
             case 30: return TRENTA;
             case 31: return TRENTAELODE;
-            default: throw new IllegalArgumentException("The mark doesn`t exist for this value");
+            default: return null;
         }
     }
 

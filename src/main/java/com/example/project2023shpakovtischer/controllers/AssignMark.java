@@ -1,6 +1,7 @@
 package com.example.project2023shpakovtischer.controllers;
 
 import com.example.project2023shpakovtischer.dao.AttendanceDAO;
+import com.example.project2023shpakovtischer.enums.Mark;
 import com.example.project2023shpakovtischer.utils.ConnectionHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -53,6 +54,9 @@ public class AssignMark extends HttpServlet {
             roundId = Integer.parseInt(request.getParameter("roundId"));
             studentId = Integer.parseInt(request.getParameter("studentId"));
             mark = Integer.parseInt( request.getParameter("mark"));
+            if(Mark.getMarkFromInt(mark) == null){
+                throw new NumberFormatException("Invalid mark");
+            }
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid student id or round id or mark");
