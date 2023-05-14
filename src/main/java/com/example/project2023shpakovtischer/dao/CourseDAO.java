@@ -10,15 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CourseDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public CourseDAO(Connection connection){
         this.connection = connection;
     }
 
     private static final String GET_COURSE_BY_ID = "SELECT * FROM course WHERE courseId = ?";
-    private static final String GET_COURSES_BY_PROFESSOR_ID = "SELECT * FROM course WHERE profid = ?";
-    private static final String GET_COURSES_BY_STUDENT_ID = "SELECT DISTINCT course.courseId, name FROM ( attends join round USING (roundId)) join course USING (courseId) WHERE studentId = ?";
+    private static final String GET_COURSES_BY_PROFESSOR_ID = "SELECT * FROM course WHERE profid = ? ORDER BY name DESC";
+    private static final String GET_COURSES_BY_STUDENT_ID = "SELECT DISTINCT course.courseId, name  FROM( ( attends join round USING (roundId)) join course USING (courseId) ) WHERE studentId = ? ORDER BY course.name DESC";
     private static final String GET_COURSE_BY_ROUND_ID = "SELECT name FROM course JOIN round USING (courseId) WHERE roundId = ?";
 
     public CourseBean getCourseById(int id) throws UnavailableException {
@@ -118,14 +118,6 @@ public class CourseDAO {
             ex.printStackTrace();
         }
 
-        try {
-            preparedStatement.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void closeStatement(PreparedStatement preparedStatement){
         try {
             preparedStatement.close();
         } catch (SQLException ex) {

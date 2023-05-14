@@ -3,7 +3,7 @@ package com.example.project2023shpakovtischer.enums;
 public enum EvaluationStatus {
     NOT_INSERTED(0), INSERTED(1), PUBLISHED(2), REFUSED(3), REPORTED(4);
 
-    private int value;
+    private final int value;
 
     EvaluationStatus(int value){
         this.value = value;

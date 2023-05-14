@@ -51,7 +51,6 @@ public class GetCourseRounds extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
-        String path = servletContext.getContextPath();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 
         List<RoundBean> rounds = null;

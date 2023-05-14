@@ -42,7 +42,7 @@ CREATE TABLE `attends` (
 
 LOCK TABLES `attends` WRITE;
 /*!40000 ALTER TABLE `attends` DISABLE KEYS */;
-INSERT INTO `attends` (`studentId`, `roundId`, `mark`, `evaluationStatus`) VALUES (2,12,NULL,0),(2,13,NULL,0),(2,15,NULL,0),(2,16,NULL,0),(3,12,NULL,0),(3,14,NULL,0),(3,15,NULL,0),(3,16,NULL,0),(6,12,NULL,0),(6,14,NULL,0),(6,16,NULL,0);
+INSERT INTO `attends` (`studentId`, `roundId`, `mark`, `evaluationStatus`) VALUES (8,18,NULL,0),(8,19,NULL,0),(8,24,NULL,0),(8,28,NULL,0),(9,19,NULL,0),(9,28,NULL,0),(10,18,NULL,0),(10,24,NULL,0),(10,25,NULL,0),(10,28,NULL,0),(10,29,NULL,0),(13,18,NULL,0),(13,20,NULL,0),(13,22,NULL,0),(13,23,NULL,0),(13,24,NULL,0),(13,28,NULL,0),(13,31,NULL,0),(14,18,NULL,0),(14,19,NULL,0),(14,22,NULL,0),(14,23,NULL,0),(14,30,NULL,0),(15,18,NULL,0),(15,19,NULL,0),(15,20,NULL,0),(15,23,NULL,0),(15,29,NULL,0);
 /*!40000 ALTER TABLE `attends` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -53,6 +53,7 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS attends_BEFORE_INSERT */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `attends_BEFORE_INSERT` BEFORE INSERT ON `attends` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
@@ -84,6 +85,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS attends_BEFORE_UPDATE */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `attends_BEFORE_UPDATE` BEFORE UPDATE ON `attends` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
@@ -133,7 +135,7 @@ CREATE TABLE `course` (
   PRIMARY KEY (`courseId`),
   KEY `userId_idx` (`profId`) /*!80000 INVISIBLE */,
   CONSTRAINT `profId` FOREIGN KEY (`profId`) REFERENCES `user` (`userId`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +144,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` (`courseId`, `name`, `profId`) VALUES (1,'Analisi 1',1),(7,'TIW',1);
+INSERT INTO `course` (`courseId`, `name`, `profId`) VALUES (8,'Analisi I',7),(9,'Informazione e Stima',11),(10,'Fondamenti di Informatica',12),(11,'Geometria e Algebra Lineare',7),(13,'Probabilità e Statistica',11),(14,'Fondamenti di Elettronica',12);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -153,6 +155,7 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS course_BEFORE_INSERT_TAUGHT_BY_PROF */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `course_BEFORE_INSERT_TAUGHT_BY_PROF` BEFORE INSERT ON `course` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
@@ -181,6 +184,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS course_TAUGHT_BY_PROF */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `course_TAUGHT_BY_PROF` BEFORE UPDATE ON `course` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
@@ -220,7 +224,7 @@ CREATE TABLE `round` (
   UNIQUE KEY `reportCode_UNIQUE` (`reportCode`),
   KEY `courseId_idx` (`courseId`),
   CONSTRAINT `courseId` FOREIGN KEY (`courseId`) REFERENCES `course` (`courseId`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,7 +233,7 @@ CREATE TABLE `round` (
 
 LOCK TABLES `round` WRITE;
 /*!40000 ALTER TABLE `round` DISABLE KEYS */;
-INSERT INTO `round` (`roundId`, `courseId`, `date`, `reportCode`, `reportDateTime`, `reportIsCreated`) VALUES (12,1,'2023-04-09',NULL,NULL,0),(13,1,'2023-04-10',NULL,NULL,0),(14,1,'2023-04-11',NULL,NULL,0),(15,7,'2023-04-10',NULL,NULL,0),(16,7,'2023-04-12',NULL,NULL,0),(17,7,'2023-04-26',NULL,NULL,0);
+INSERT INTO `round` (`roundId`, `courseId`, `date`, `reportCode`, `reportDateTime`, `reportIsCreated`) VALUES (18,8,'2023-05-21',NULL,NULL,0),(19,8,'2023-06-11',NULL,NULL,0),(20,9,'2023-05-18',NULL,NULL,0),(21,9,'2023-06-08',NULL,NULL,0),(22,10,'2023-05-24',NULL,NULL,0),(23,10,'2023-06-05',NULL,NULL,0),(24,11,'2023-05-26',NULL,NULL,0),(25,11,'2023-06-07',NULL,NULL,0),(28,13,'2023-05-31',NULL,NULL,0),(29,13,'2023-06-12',NULL,NULL,0),(30,14,'2023-06-01',NULL,NULL,0),(31,14,'2023-06-19',NULL,NULL,0);
 /*!40000 ALTER TABLE `round` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -240,6 +244,7 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS round_BEFORE_INSERT_REPORT_VALIDITY */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `round_BEFORE_INSERT_REPORT_VALIDITY` BEFORE INSERT ON `round` FOR EACH ROW BEGIN
 	DECLARE max_report_code integer;
@@ -274,6 +279,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS round_BEFORE_UPDATE_REPORT_IMMUTABLE */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `round_BEFORE_UPDATE_REPORT_IMMUTABLE` BEFORE UPDATE ON `round` FOR EACH ROW BEGIN
 	
@@ -349,7 +355,7 @@ CREATE TABLE `user` (
   `studyCourse` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -358,7 +364,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`userId`, `password`, `name`, `surname`, `email`, `role`, `studyCourse`) VALUES (1,'pass1','Piero','Fraternali','1@email.com',_binary '',NULL),(2,'pass2','Mike','Shpakov','2@email.com',_binary '\0','gestionale'),(3,'pass3','Alessandro','Tischer','3@email.com',_binary '\0','fisica'),(5,'pass5','Davide','Martinenghi','5@email.com',_binary '',NULL),(6,'pass6','Giacomo','Stefanizzi','6@email.com',_binary '\0','informatica');
+INSERT INTO `user` (`userId`, `password`, `name`, `surname`, `email`, `role`, `studyCourse`) VALUES (7,'pass1','Mario','Rossi','mario.rossi@email.com',_binary '',NULL),(8,'pass2','Riccardo','Romito','riccardo.romito@email.com',_binary '\0','Ingegneria Biomedica'),(9,'pass3','Marco','Zanotti','marco.zanotti@email.com',_binary '\0','Ingegneria Biomedica'),(10,'pass4','Chiara','Casali','chiara.casali@email.com',_binary '\0','Ingegneria Fisica'),(11,'pass5','Giovanni','Bianchi','giovanni.bianchi@email.com',_binary '',NULL),(12,'pass6','Francesca','Costa','francesca.costa@email.com',_binary '',NULL),(13,'pass7','Matteo','Gallo','matteo.gallo@email.com',_binary '\0','Ingegneria Informatica'),(14,'pass8','Alessandro','Pignati','alessandro.pignati@email.com',_binary '\0','Ingegneria Gestionale'),(15,'pass9','Carlo','Ferrari','carlo.ferrari@email.com',_binary '\0','Ingegneria Informatica');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -369,6 +375,7 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS user_ROLE_AND_STUDYCOURSE */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_ROLE_AND_STUDYCOURSE` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
 	if ( new.role = '0' and new.studyCourse is null ) then
@@ -393,6 +400,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50032 DROP TRIGGER IF EXISTS user_BEFORE_UPDATE_ROLE_AND_STUDYCOURSE */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_BEFORE_UPDATE_ROLE_AND_STUDYCOURSE` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
 	if ( new.role = 0 and new.studyCourse is null ) then
@@ -437,4 +445,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-26 23:03:10
+-- Dump completed on 2023-05-13 22:37:34

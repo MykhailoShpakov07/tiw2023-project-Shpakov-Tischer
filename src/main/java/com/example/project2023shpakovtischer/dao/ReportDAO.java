@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ReportDAO {
-    private Connection connection;
+    private final Connection connection;
 
 
     private static final String REPORT_MARKS = "UPDATE attends SET evaluationStatus = 4 WHERE roundId = ? and ( evaluationStatus = 2 or evaluationStatus = 3 )";
@@ -22,7 +22,7 @@ public class ReportDAO {
         this.connection = connection;
     }
 
-    public ReportBean createReport(int roundId) throws UnavailableException, SQLException {
+    public void createReport(int roundId) throws UnavailableException, SQLException {
         try {
             connection.setAutoCommit(false);
             reportRound(roundId);
@@ -36,8 +36,6 @@ public class ReportDAO {
             throw new UnavailableException(e.getMessage());
         }
         connection.setAutoCommit(true);
-
-        return getReportByRoundId(roundId);
     }
 
 

@@ -4,7 +4,6 @@ import com.example.project2023shpakovtischer.beans.UserBean;
 import com.example.project2023shpakovtischer.enums.UserRole;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpFilter;
@@ -14,14 +13,6 @@ import java.io.IOException;
 
 @WebFilter(filterName = "IsStudentChecker")
 public class IsStudentChecker extends HttpFilter {
-
-    public void init(FilterConfig config) throws ServletException {
-        super.init(config);
-    }
-
-    public void destroy() {
-        super.destroy();
-    }
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {

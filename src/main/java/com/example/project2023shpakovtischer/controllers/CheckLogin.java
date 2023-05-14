@@ -70,8 +70,6 @@ public class CheckLogin extends HttpServlet{
             System.out.println(e.getMessage());
             return;
         }
-
-        String path = getServletContext().getContextPath();
         String message = null;
 
         if (user == null) {
@@ -88,7 +86,7 @@ public class CheckLogin extends HttpServlet{
             //set password = null for security reasons
             user.setPassword(null);
             request.getSession().setAttribute("user", user);
-            response.sendRedirect(path + GET_COURSES_SERVLET);
+            response.sendRedirect(getServletContext().getContextPath() + GET_COURSES_SERVLET);
         }
 
         //render login page with error message

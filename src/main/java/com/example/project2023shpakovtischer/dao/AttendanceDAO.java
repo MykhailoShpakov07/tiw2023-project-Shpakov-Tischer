@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendanceDAO {
-    private Connection connection;
+    private final Connection connection;
 
     private static final String GET_ATTENDANCES_BY_ROUND_ID_ORDERED_BY = "SELECT studentId, name, surname, email, studyCourse, mark, evaluationStatus " +
             "FROM attends join user on studentId = userId WHERE roundId = ? ORDER BY ";

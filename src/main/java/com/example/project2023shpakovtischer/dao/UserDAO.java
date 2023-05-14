@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class UserDAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public UserDAO(Connection connection){
         this.connection = connection;
@@ -85,14 +85,6 @@ public class UserDAO {
             ex.printStackTrace();
         }
 
-        try {
-            preparedStatement.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void closeStatement(PreparedStatement preparedStatement){
         try {
             preparedStatement.close();
         } catch (SQLException ex) {

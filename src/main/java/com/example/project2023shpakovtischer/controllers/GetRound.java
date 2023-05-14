@@ -55,10 +55,7 @@ public class GetRound extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
-        String path = servletContext.getContextPath();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-
-        String message = null;
         UserBean user = (UserBean) request.getSession().getAttribute("user");
 
         int roundId = -1;
@@ -75,9 +72,9 @@ public class GetRound extends HttpServlet {
             Optional<AttendeesColumn> optOrderLabel = Optional.empty();
             Optional<Boolean> optReverse = Optional.empty();
             AttendeesColumn orderLabel;
-            Boolean reverse;
+            boolean reverse;
             //var that tells whether the marks for this round can be published
-            Boolean canBePublished = false;
+            boolean canBePublished = false;
             //var that tells the status of the report, 0 - can`t be published, 1-can be created, 2-already exists
             int reportStatus = 0;
 

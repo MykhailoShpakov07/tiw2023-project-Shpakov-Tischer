@@ -35,8 +35,6 @@ public class PublishMarks extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletContext servletContext = getServletContext();
-        String path = servletContext.getContextPath();
         int roundId = -1;
 
         try {
@@ -57,7 +55,7 @@ public class PublishMarks extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while publishing marks");
         }
 
-        response.sendRedirect(path + GET_ROUND_SERVLET + "?roundId=" + roundId);
+        response.sendRedirect(getServletContext().getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
     }
 
     @Override
