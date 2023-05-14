@@ -54,7 +54,7 @@ public class LoggedInChecker extends HttpFilter {
                 ctx.removeVariable("message");
                 chain.doFilter(request, response);
             } else {
-                ctx.setVariable("message", "You must be logged in to access this page !");
+                ctx.setVariable("message", "You must be logged in to access this page!");
                 templateEngine.process(LOGIN_PAGE, ctx, response.getWriter());
             }
         }

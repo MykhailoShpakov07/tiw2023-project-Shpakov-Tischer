@@ -32,8 +32,8 @@
                 </td>
             </tr>
         </table>
-        <button th:if="${attendance.getEvaluationStatus().getValue()==2}">
-            <a th:href="@{${refuseMarkServletPath}(roundId=${round.id})}">
+        <button th:if="${attendance.getEvaluationStatus().getValue()==2 and attendance.getMark().getValue()>=18}">
+            <a th:href="@{${refuseMarkServletPath}(roundId=${round.id}, studentId=${attendance.studentId})}">
                 RIFIUTA
             </a>
         </button>
