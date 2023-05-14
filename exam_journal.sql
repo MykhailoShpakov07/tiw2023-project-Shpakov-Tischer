@@ -57,6 +57,14 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `attends_BEFORE_INSERT` BEFORE INSERT ON `attends` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
+    DECLARE round_is_reported tinyint(1);
+
+    SET round_is_reported = (select `round`.`reportIsCreated` from `round` where `round`.`roundId`= new.roundId);
+
+    if (round_is_reported = 1) then
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Insertion canceled. The given round is already reported';
+    end if;
     
     SET user_role = (select `user`.`role` from `user` where `user`.`userId`= new.studentId);
 
@@ -89,6 +97,14 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `attends_BEFORE_UPDATE` BEFORE UPDATE ON `attends` FOR EACH ROW BEGIN
 	DECLARE user_role integer;
+    DECLARE round_is_reported tinyint(1);
+
+    SET round_is_reported = (select `round`.`reportIsCreated` from `round` where `round`.`roundId`= new.roundId);
+
+    if (old.roundId != new.roundId and round_is_reported = 1) then
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Update canceled. The given round is already reported';
+    end if;
     
     SET user_role = (select `user`.`role` from `user` where `user`.`userId`= new.studentId);
 
