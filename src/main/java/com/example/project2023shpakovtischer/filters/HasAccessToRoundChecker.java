@@ -41,6 +41,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
         } catch (NumberFormatException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "roundId parameter is not an integer!");
+            return;
         }
         int userId = ((UserBean) request.getSession().getAttribute("user")).getId();
         UserRole role = ((UserBean) request.getSession().getAttribute("user")).getRole();
@@ -49,12 +50,14 @@ public class HasAccessToRoundChecker extends HttpFilter {
             RoundBean round = roundDAO.getRoundById(roundId);
             if (round == null){
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, " roundId is not valid!");
+                return;
             }
             else {
                 if (round.getProfessorId() == userId) {
                     chain.doFilter(request, response);
                 } else {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Non sei autorizzato ad accedere a questo round!");
+                    return;
                 }
             }
         } else if (role.equals(UserRole.STUDENT)) {
@@ -63,6 +66,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
 
             if (round == null){
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "roundId is not valid!");
+                return;
             }
             else {
                 AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
@@ -72,6 +76,7 @@ public class HasAccessToRoundChecker extends HttpFilter {
                     chain.doFilter(request, response);
                 } else {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this round!");
+                    return;
                 }
             }
 

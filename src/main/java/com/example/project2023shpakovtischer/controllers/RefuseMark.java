@@ -41,21 +41,26 @@ public class RefuseMark extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
+            return;
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
             AttendanceBean attendance = attendanceDAO.getAttendance(roundId, studentId);
             if (attendance.getEvaluationStatus().getValue() == 3) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The mark has already been refused");
+                return;
             } else if (attendance.getEvaluationStatus().getValue() == 4) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The mark has already been reported");
+                return;
             } else if (attendance.getEvaluationStatus().getValue() < 2) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "It is not possible to refuse the mark at this time");
+                return;
             }
             attendanceDAO.refuseMark(roundId, studentId);
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "It was not possible to refuse the mark");
+            return;
         }
         response.sendRedirect(getServletContext().getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);
     }

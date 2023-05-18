@@ -70,6 +70,7 @@ public class GetCourses extends HttpServlet {
         catch (UnavailableException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving courses");
+            return;
         }
 
         message = "Benvenuto " + user.getName() + " " + user.getSurname() + "!";

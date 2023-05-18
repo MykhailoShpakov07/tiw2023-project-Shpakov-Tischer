@@ -56,6 +56,7 @@ public class GetAssignMarkPage extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId or studentId parameter");
+            return;
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         AttendanceBean attendance = null;
@@ -64,9 +65,11 @@ public class GetAssignMarkPage extends HttpServlet {
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while getting attendance");
+            return;
         }
         if (attendance == null){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No attendance found for given parameters");
+            return;
         }
 
         ctx.setVariable("assignMarkServletPath", getServletContext().getContextPath() + ASSIGN_MARK_SERVLET);

@@ -59,6 +59,7 @@ public class CreateReport extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
+            return;
         }
 
 
@@ -80,6 +81,7 @@ public class CreateReport extends HttpServlet {
                 } catch (SQLException | UnavailableException e) {
                     System.out.println(e.getMessage());
                     response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while creating report");
+                    return;
                 }
             }
             else if (report != null) {
@@ -87,11 +89,13 @@ public class CreateReport extends HttpServlet {
             }
             else{
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Report cannot be created at this time");
+                return;
             }
         }
         catch (UnavailableException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
+            return;
         }
     }
 

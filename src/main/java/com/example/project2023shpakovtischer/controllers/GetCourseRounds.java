@@ -66,6 +66,7 @@ public class GetCourseRounds extends HttpServlet {
         catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId parameter");
+            return;
         }
 
         try {
@@ -78,6 +79,7 @@ public class GetCourseRounds extends HttpServlet {
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access while retrieving course rounds");
+            return;
         }
 
         ctx.setVariable("course", course);

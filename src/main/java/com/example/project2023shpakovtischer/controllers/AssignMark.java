@@ -47,6 +47,7 @@ public class AssignMark extends HttpServlet {
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid student id or round id or mark");
+            return;
         }
         AttendanceDAO attendanceDAO = new AttendanceDAO(connection);
         try {
@@ -54,6 +55,7 @@ public class AssignMark extends HttpServlet {
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while assigning mark");
+            return;
         }
 
         response.sendRedirect(getServletContext().getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);

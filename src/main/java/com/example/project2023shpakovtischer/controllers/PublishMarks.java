@@ -43,6 +43,7 @@ public class PublishMarks extends HttpServlet {
         catch (NumberFormatException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
+            return;
         }
 
         //no need to control if user can publish marks, because publishMarks() method
@@ -53,6 +54,7 @@ public class PublishMarks extends HttpServlet {
         } catch (UnavailableException e) {
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error in database while publishing marks");
+            return;
         }
 
         response.sendRedirect(getServletContext().getContextPath() + GET_ROUND_SERVLET + "?roundId=" + roundId);

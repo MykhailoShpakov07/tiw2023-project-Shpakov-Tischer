@@ -22,6 +22,7 @@ public class IsProfessorChecker extends HttpFilter {
             chain.doFilter(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Only professor can access this page!");
+            return;
         }
     }
 }

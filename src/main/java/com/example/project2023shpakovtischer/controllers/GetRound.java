@@ -65,6 +65,7 @@ public class GetRound extends HttpServlet {
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid roundId parameter");
+            return;
         }
 
         if (user.getRole().equals(UserRole.PROFESSOR)){
@@ -85,6 +86,7 @@ public class GetRound extends HttpServlet {
             catch (IllegalArgumentException e){
                 System.out.println(e.getMessage());
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid orderLabel parameter");
+                return;
             }
 
             /*contains optional of boolean value of the parameter passed inside request
@@ -139,6 +141,7 @@ public class GetRound extends HttpServlet {
             catch (UnavailableException e){
                 System.out.println(e.getMessage());
                 response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
+                return;
             }
 
             ctx.setVariable("columnNames", List.of(AttendeesColumn.values()) );
@@ -177,6 +180,7 @@ public class GetRound extends HttpServlet {
             catch (UnavailableException e){
                 System.out.println(e.getMessage());
                 response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Failure in database access");
+                return;
             }
 
             ctx.setVariable("attendance", attendance);

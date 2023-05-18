@@ -42,6 +42,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
         } catch (NumberFormatException e){
             System.out.println(e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "courseId is not an integer!");
+            return;
         }
         //LoggedInChecker must be applied before this filter
         int UserId = ((UserBean) request.getSession().getAttribute("user")).getId();
@@ -51,12 +52,14 @@ public class HasAccessToCourseChecker extends HttpFilter {
             CourseBean course = courseDAO.getCourseById(CourseId);
             if(course == null){
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
+                return;
             }
             else {
                 if (course.getProfessorId() == UserId) {
                     chain.doFilter(request, response);
                 } else {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this course");
+                    return;
                 }
             }
         } else if (role.equals(UserRole.STUDENT)) {
@@ -67,6 +70,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
             CourseBean course = courseDAO.getCourseById(CourseId);
             if(course == null){
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid courseId");
+                return;
             }
             else {
                 //check if user has at least one round relative to that course
@@ -74,6 +78,7 @@ public class HasAccessToCourseChecker extends HttpFilter {
                     chain.doFilter(request, response);
                 } else {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this course");
+                    return;
                 }
             }
         }
